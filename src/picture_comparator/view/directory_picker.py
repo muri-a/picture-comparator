@@ -6,7 +6,7 @@ from typing import Optional, Union
 from PySide6.QtCore import QDir, QModelIndex, QStringListModel, QSortFilterProxyModel, QPersistentModelIndex, Qt
 from PySide6.QtWidgets import QDialog, QFileSystemModel, QDialogButtonBox
 
-from view.directory_picker_ui import Ui_Dialog
+from picture_comparator.view.directory_picker_ui import Ui_Dialog
 
 
 def path_from_index(index: QModelIndex):

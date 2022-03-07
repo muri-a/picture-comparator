@@ -2,9 +2,9 @@ import sys
 
 from PySide6.QtCore import QObject
 
-from controller.directory_picker import DirectoryPickerController
-from controller.main_window import MainWindowController
-from controller.settings import Settings
+from picture_comparator.controller.directory_picker import DirectoryPickerController
+from picture_comparator.controller.main_window import MainWindowController
+from picture_comparator.controller.settings import Settings
 
 
 class Application(QObject):

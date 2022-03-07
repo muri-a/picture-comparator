@@ -3,9 +3,9 @@ from typing import Union, Optional, Set
 
 from PySide6.QtCore import QItemSelectionModel, QModelIndex, QPersistentModelIndex, QItemSelection, Signal
 
-from model.display_settings import DisplaySettings, DisplayMode
-from model.image_info import ImageInfo
-from model.utils import first, last
+from picture_comparator.model.display_settings import DisplaySettings, DisplayMode
+from picture_comparator.model.image_info import ImageInfo
+from picture_comparator.model.utils import first, last
 
 
 class ManualSelection:

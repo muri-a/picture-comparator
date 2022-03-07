@@ -3,20 +3,20 @@ from typing import Optional, List
 from PySide6.QtCore import QItemSelection, QItemSelectionModel, Slot
 from PySide6.QtWidgets import QPushButton, QMessageBox
 
-from controller.action_buttons import ActionButtonsController
-from controller.comparator import Comparator
-from model.display_settings import DisplayMode
-from model.group_selection_model import GroupSelectionModel
-from model.image_group import ImageGroup
-from model.image_info import ImageInfo
-from model.watched_list import WatchedList
-from view.group_list_view import GroupListView
-from view.main_window_ui import Ui_MainWindow
+from picture_comparator.controller.action_buttons import ActionButtonsController
+from picture_comparator.controller.comparator import Comparator
+from picture_comparator.model.display_settings import DisplayMode
+from picture_comparator.model.group_selection_model import GroupSelectionModel
+from picture_comparator.model.image_group import ImageGroup
+from picture_comparator.model.image_info import ImageInfo
+from picture_comparator.model.watched_list import WatchedList
+from picture_comparator.view.group_list_view import GroupListView
+from picture_comparator.view.main_window_ui import Ui_MainWindow
 
 
 class GroupList:
     def __init__(self, main_window_controller):
-        from controller.main_window import MainWindowController
+        from picture_comparator.controller.main_window import MainWindowController
         self.main_window_controller: MainWindowController = main_window_controller
         self.comparator = Comparator(main_window_controller)
         self.action_buttons: ActionButtonsController = main_window_controller.action_buttons

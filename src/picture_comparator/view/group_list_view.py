@@ -4,13 +4,13 @@ from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QSize, Qt, QRect
 from PySide6.QtGui import QPainter, QResizeEvent, QMouseEvent
 from PySide6.QtWidgets import QListView, QStyleOptionViewItem, QStyledItemDelegate, QStyle
 
-from model.display_settings import DisplaySettings
-from model.group_selection_model import GroupSelectionModel
-from model.image_group import ImageGroup
-from model.image_info import ImageInfo
-from model.utils import ThresholdFind
-from model.watched_list import WatchedListModel
-from resources.resources import Resources
+from picture_comparator.model.display_settings import DisplaySettings
+from picture_comparator.model.group_selection_model import GroupSelectionModel
+from picture_comparator.model.image_group import ImageGroup
+from picture_comparator.model.image_info import ImageInfo
+from picture_comparator.model.utils import ThresholdFind
+from picture_comparator.model.watched_list import WatchedListModel
+from picture_comparator.resources.resources import Resources
 
 
 class GroupListDelegate(QStyledItemDelegate):

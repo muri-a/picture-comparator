@@ -3,7 +3,7 @@ from typing import List
 
 from PySide6.QtCore import QModelIndex
 
-from view.directory_picker import DirectoryPicker
+from picture_comparator.view.directory_picker import DirectoryPicker
 
 
 class DirectoryPickerController:

@@ -3,7 +3,7 @@ from typing import Iterable, List
 
 from PySide6.QtCore import QFile
 
-from model.image_info import ImageInfo
+from picture_comparator.model.image_info import ImageInfo
 
 
 class ImageGroup:

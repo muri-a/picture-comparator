@@ -5,8 +5,8 @@ from PySide6.QtGui import QPainter, QImage
 from PySide6.QtWidgets import QGridLayout, QScrollArea, QListView, QAbstractItemDelegate, QStyleOptionViewItem, QStyle, \
     QWidget
 
-from model.image_group import ImageGroup
-from model.watched_list import WatchedList, WatchedListModel
+from picture_comparator.model.image_group import ImageGroup
+from picture_comparator.model.watched_list import WatchedList, WatchedListModel
 
 
 class MatchesView:  # TODO; Think what to do with it, after stack view is added

@@ -1,7 +1,7 @@
 from typing import List
 
-from controller.action_buttons import ActionButtonsController
-from model.image_info import ImageInfo
+from picture_comparator.controller.action_buttons import ActionButtonsController
+from picture_comparator.model.image_info import ImageInfo
 
 
 class Comparator:

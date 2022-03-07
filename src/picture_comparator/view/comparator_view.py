@@ -3,17 +3,16 @@ from __future__ import annotations
 import math
 import os.path
 from enum import Enum
-from itertools import chain
 from pathlib import Path
-from typing import List, Optional, Tuple, Union, Iterable, AnyStr
+from typing import List, Optional, Tuple
 
 from PySide6.QtCore import QRect, Qt, QPoint, QSize
-from PySide6.QtGui import QPaintEvent, QPainter, QResizeEvent, QMouseEvent, QWheelEvent, QPen, QFont, QColor, \
-    QStaticText, QPainterPath, QTextOption
+from PySide6.QtGui import QPaintEvent, QPainter, QResizeEvent, QMouseEvent, QWheelEvent, QColor, QStaticText, \
+    QPainterPath
 from PySide6.QtWidgets import QWidget
 
-from model.display_settings import DisplaySettings, Zoom
-from model.image_info import ImageInfo, ImageQuality
+from picture_comparator.model.display_settings import DisplaySettings, Zoom
+from picture_comparator.model.image_info import ImageInfo, ImageQuality
 
 
 class InfoState(Enum):

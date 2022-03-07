@@ -13,7 +13,7 @@ class Zoom(Enum):
 
 class DisplaySettings:
     def __init__(self, action_buttons_controller):
-        from controller.action_buttons import ActionButtonsController
+        from picture_comparator.controller.action_buttons import ActionButtonsController
         self.action_buttons_controller: ActionButtonsController = action_buttons_controller
         self.zoom = Zoom.SCALED
         self.display_mode = DisplayMode.ONE_BY_ONE

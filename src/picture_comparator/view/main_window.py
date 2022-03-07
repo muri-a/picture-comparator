@@ -2,7 +2,7 @@ from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import QMainWindow
 
-from view.main_window_ui import Ui_MainWindow
+from picture_comparator.view.main_window_ui import Ui_MainWindow
 
 
 class MainWindow(QMainWindow):

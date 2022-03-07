@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 
 from PySide6.QtWidgets import QApplication
 
-from controller.application import Application
+from picture_comparator.controller.application import Application
 
 
 def main():

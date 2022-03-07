@@ -7,9 +7,9 @@ from PySide6.QtCore import QObject, QThread, Signal
 from numpy import ndarray
 from sklearn.neighbors import BallTree
 
-from controller.settings import Settings
-from model.image_group import ImageGroup
-from model.image_info import ImageInfo
+from picture_comparator.controller.settings import Settings
+from picture_comparator.model.image_group import ImageGroup
+from picture_comparator.model.image_info import ImageInfo
 
 
 class SearchThread(QThread):

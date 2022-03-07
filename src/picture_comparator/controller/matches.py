@@ -2,13 +2,13 @@ from typing import List, Optional
 
 from PySide6.QtCore import Slot, Qt, QItemSelection, QItemSelectionModel
 
-from controller.group_list import GroupList
-from model.image_group import ImageGroup
-from model.search_engine import SearchEngine
-from model.utils import first
-from model.watched_list import WatchedList
-from view.main_window_ui import Ui_MainWindow
-from view.matches_view import MatchesListView, WatchedListModel
+from picture_comparator.controller.group_list import GroupList
+from picture_comparator.model.image_group import ImageGroup
+from picture_comparator.model.search_engine import SearchEngine
+from picture_comparator.model.utils import first
+from picture_comparator.model.watched_list import WatchedList, WatchedListModel
+from picture_comparator.view.main_window_ui import Ui_MainWindow
+from picture_comparator.view.matches_view import MatchesListView
 
 
 class MatchesController:

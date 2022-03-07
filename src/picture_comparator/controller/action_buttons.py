@@ -1,7 +1,7 @@
 from PySide6.QtCore import Signal, QObject
 from PySide6.QtWidgets import QButtonGroup, QAbstractButton
 
-from model.display_settings import DisplaySettings, DisplayMode
+from picture_comparator.model.display_settings import DisplaySettings, DisplayMode
 
 
 class ActionButtonsController(QObject):
@@ -11,7 +11,7 @@ class ActionButtonsController(QObject):
 
     def __init__(self, main_window_controller):
         super().__init__()
-        from controller.main_window import MainWindowController
+        from picture_comparator.controller.main_window import MainWindowController
         self.main_window_controller: MainWindowController = main_window_controller
         self.display_mode_buttons = QButtonGroup()
         self.display_mode_buttons.addButton(self.main_window_controller.window.ui.display_multiple_button)

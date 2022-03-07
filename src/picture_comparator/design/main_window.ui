@@ -291,24 +291,24 @@
   <customwidget>
    <class>MatchesListView</class>
    <extends>QListView</extends>
-   <header>view/matches_view</header>
+   <header>picture_comparator/view/matches_view</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>MatchesStackView</class>
    <extends>QWidget</extends>
-   <header>view/matches_view</header>
+   <header>picture_comparator/view/matches_view</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>GroupListView</class>
    <extends>QListView</extends>
-   <header>view/group_list_view</header>
+   <header>picture_comparator/view/group_list_view</header>
   </customwidget>
   <customwidget>
    <class>CompareWidget</class>
    <extends>QWidget</extends>
-   <header>view/comparator_view</header>
+   <header>picture_comparator/view/comparator_view</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -1,13 +1,13 @@
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QApplication
 
-from controller.action_buttons import ActionButtonsController
-from controller.group_list import GroupList
-from controller.matches import MatchesController
-from controller.settings import Settings
-from model.image_info import ImageInfo
-from model.search_engine import SearchEngine
-from view.main_window import MainWindow
+from picture_comparator.controller.action_buttons import ActionButtonsController
+from picture_comparator.controller.group_list import GroupList
+from picture_comparator.controller.matches import MatchesController
+from picture_comparator.controller.settings import Settings
+from picture_comparator.model.image_info import ImageInfo
+from picture_comparator.model.search_engine import SearchEngine
+from picture_comparator.view.main_window import MainWindow
 
 
 class MainWindowController:
