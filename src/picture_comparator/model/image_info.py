@@ -10,6 +10,8 @@ from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QImage
 from wand.image import Image as WImage
 
+from picture_comparator.model.exceptions import ImageTooBigException
+
 
 class ImageQuality:
     def __init__(self, ext: str, lossless: bool, value: int):
@@ -49,10 +51,14 @@ class ImageQuality:
 
 
 class ImageInfo:
+    SIZE_LIMIT = 0x2000000
+
     def __init__(self, path: str):
         self.path = path
         self.index: Optional[int] = None
         image = Image.open(path)
+        if image.width * image.height > self.SIZE_LIMIT:
+            raise ImageTooBigException(path)
         # a_hash = imagehash.average_hash(image)
         hash = imagehash.whash(image)
         self.hash = []
@@ -95,7 +101,7 @@ class ImageInfo:
         width = self._cache_width.get(height)
         if width is None:
             image = self.qimage()
-            width = round(height * image.width() / image.height())
+            width = round(height * image.width() / image.height()) if image.height() else 0
         return width
 
     def height(self) -> int:

@@ -8,6 +8,7 @@ from numpy import ndarray
 from sklearn.neighbors import BallTree
 
 from picture_comparator.controller.settings import Settings
+from picture_comparator.model.exceptions import ImageTooBigException
 from picture_comparator.model.image_group import ImageGroup
 from picture_comparator.model.image_info import ImageInfo
 
@@ -63,7 +64,12 @@ class SearchThread(QThread):
                 if self.settings.scan_subdirectories and path not in self.all_dirs:
                     self._add_directory(path)
             elif ImageInfo.is_image(path):
-                image = ImageInfo(path)
+                try:
+                    image = ImageInfo(path)
+                except ImageTooBigException as e:
+                    print(e.args[0])
+                    self.search_engine.ImageTooBig.emit(path)
+                    continue
                 self._add_image(image)
         self.search_engine.ImageSearchEnded.emit()
 
@@ -82,7 +88,7 @@ class SearchThread(QThread):
     def _find_results(self):
         X = [image.hash for image in self.images]
         self.image_tree = BallTree(X)
-        self.raw_results = self.image_tree.query_radius(X, 4)
+        self.raw_results = self.image_tree.query_radius(X, 3)
         for i, result in enumerate(self.raw_results):
             if len(result) < 2:
                 continue
@@ -111,10 +117,12 @@ class SearchThread(QThread):
                 self.group_map[index] = main_group
 
         self.search_engine.ResultsReady.emit(self.groups)
+        self.image_tree = None
 
 
 class SearchEngine(QObject):
     ImageFound = Signal(ImageInfo)
+    ImageTooBig = Signal(str)
     ImageSearchEnded = Signal()
     ResultsReady = Signal(list)
 

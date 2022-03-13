@@ -54,18 +54,10 @@ class PathAttribute(InfoAttribute):
 
     @staticmethod
     def trim_paths(paths: List[PathAttribute]):
-        split_paths: List[Path] = [Path(path.value) for path in paths]
-        shared = split_paths[0].parent
-        for path in split_paths[1:]:
-            p = path.parent
-            while p != shared and p not in shared.parents:
-                p = path.parent
-            shared = p
-        shared = str(shared)
-        if len(shared) == 1:
-            shared = ''
+        str_paths = [p.value for p in paths]
+        common = os.path.commonpath(str_paths)
         for path in paths:
-            path.raw_text = path.value[len(shared) + 1:]
+            path.raw_text = path.value[len(common) + 1:]
 
 
 class ResolutionAttribute(InfoAttribute):

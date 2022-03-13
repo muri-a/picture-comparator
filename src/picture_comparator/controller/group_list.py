@@ -50,7 +50,7 @@ class GroupList:
         self.update_selection()
 
     def update_selection(self):
-        index = self.list_view.model().createIndex(-1, -1)
+        index = self.list_view.model().createIndex(0, 0)
         selection = QItemSelection(index, index)
         self.selection.select(selection, QItemSelectionModel.Select)
 
@@ -75,10 +75,14 @@ class GroupList:
     @Slot()
     def delete_marked(self, *args):
         if self.image_group and self.image_group.has_marked():
-            reply = QMessageBox.warning(self.main_window_controller.window, "Are sure?",
-                                        "Do you want to remove marked files?", QMessageBox.Apply | QMessageBox.Cancel)
+            to_remove = self.image_group.marked_for_deletion()
+            files_list = ''
+            for file in to_remove:
+                files_list += file.path + "\n"
+            reply = QMessageBox.warning(self.main_window_controller.window, "Move to the trash?",
+                                        f"Do you want to remove marked files?\n{files_list}",
+                                        QMessageBox.Apply | QMessageBox.Cancel)
             if reply == QMessageBox.Apply:
-                to_remove = self.image_group.marked_for_deletion()
                 if len(self.image_group) - len(to_remove) > 1:
                     self.images.remove_multiple(to_remove)
                     self.update_selection()
