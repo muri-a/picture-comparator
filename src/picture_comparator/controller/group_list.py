@@ -85,7 +85,7 @@ class GroupList:
                                         QMessageBox.Apply | QMessageBox.Cancel)
             if reply == QMessageBox.Apply:
                 self.image_group.delete_marked()
-                if len(self.image_group):
+                if len(self.image_group) > 1:
                     self.images.remove_multiple(to_remove)
                     self.update_selection()
                 else:

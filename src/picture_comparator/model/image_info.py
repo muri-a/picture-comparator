@@ -22,6 +22,8 @@ class ImageQuality:
     def __gt__(self, other):
         if not isinstance(other, ImageQuality):
             raise TypeError(f"Cannot compare {ImageQuality.__name__} with {type(other)}")
+        if self.lossless is None or other.lossless is None:
+            return False
         return self.lossless and not other.lossless or self.ext == other.ext and self.value > other.value
 
     def __ge__(self, other):
@@ -30,6 +32,8 @@ class ImageQuality:
     def __lt__(self, other):
         if not isinstance(other, ImageQuality):
             raise TypeError(f"Cannot compare {ImageQuality.__name__} with {type(other)}")
+        if self.lossless is None or other.lossless is None:
+            return False
         return not self.lossless and other.lossless or self.ext == other.ext and self.value < other.value
 
     def __le__(self, other):
@@ -38,7 +42,8 @@ class ImageQuality:
     def __eq__(self, other):
         if not isinstance(other, ImageQuality):
             raise TypeError(f"Cannot compare {ImageQuality.__name__} with {type(other)}")
-        return self.lossless and other.lossless or self.ext == other.ext and self.value == other.value
+        return self.lossless and other.lossless or\
+               (self.ext is not None and other.ext is not None and self.ext == other.ext) and self.value == other.value
 
     @classmethod
     def from_wimage(cls, wimage: WImage) -> ImageQuality:
