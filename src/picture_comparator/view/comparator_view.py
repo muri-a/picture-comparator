@@ -3,7 +3,6 @@ from __future__ import annotations
 import math
 import os.path
 from enum import Enum
-from pathlib import Path
 from typing import List, Optional, Tuple
 
 from PySide6.QtCore import QRect, Qt, QPoint, QSize
@@ -50,14 +49,18 @@ class InfoAttribute:
 class PathAttribute(InfoAttribute):
     def __init__(self, path: str):
         super().__init__(path)
-        self.raw_text = os.path.split(path)[-1]
+        self.raw_text = os.path.basename(path)
 
     @staticmethod
     def trim_paths(paths: List[PathAttribute]):
-        str_paths = [p.value for p in paths]
-        common = os.path.commonpath(str_paths)
-        for path in paths:
-            path.raw_text = path.value[len(common) + 1:]
+        if len(paths) > 1:
+            str_paths = [p.value for p in paths]
+            common = os.path.commonpath(str_paths)
+            for path in paths:
+                path.raw_text = path.value[len(common) + 1:]
+        else:
+            for path in paths:
+                path.raw_text = os.path.basename(path.value)
 
 
 class ResolutionAttribute(InfoAttribute):
@@ -297,8 +300,8 @@ class CompareWidget(QWidget):
                 self.adjust_zoom(section, self.leading_section.zoom, self.leading_section.fit_zoom)
 
     def set_images(self, images: List, group_changed: bool):
-        old_zoom = self.leading_section.zoom if self.leading_section and not group_changed else None
-        old_fit_zoom = self.leading_section.fit_zoom if self.leading_section and not group_changed else None
+        old_zoom = self.leading_section.zoom if self.leading_section and not group_changed and len(images) else None
+        old_fit_zoom = self.leading_section.fit_zoom if self.leading_section and not group_changed and len(images) else None
 
         self.sections.clear()
         self.sections = [Section(image) for image in images]

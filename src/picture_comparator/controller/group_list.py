@@ -47,6 +47,7 @@ class GroupList:
         image_group.clear_markings()
         self.image_group = image_group
         self.images.replace(image_group)
+        self.comparator.clear()
         self.update_selection()
 
     def update_selection(self):
@@ -83,10 +84,10 @@ class GroupList:
                                         f"Do you want to remove marked files?\n{files_list}",
                                         QMessageBox.Apply | QMessageBox.Cancel)
             if reply == QMessageBox.Apply:
-                if len(self.image_group) - len(to_remove) > 1:
+                self.image_group.delete_marked()
+                if len(self.image_group):
                     self.images.remove_multiple(to_remove)
                     self.update_selection()
                 else:
                     # No images to compare. Drop current match group.
                     self.main_window_controller.matches.remove_current_match()
-                self.image_group.delete_marked()
