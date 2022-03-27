@@ -2,7 +2,7 @@ from typing import Union, Optional, Iterable
 
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QSize, Qt, QRect
 from PySide6.QtGui import QPainter, QResizeEvent, QMouseEvent
-from PySide6.QtWidgets import QListView, QStyleOptionViewItem, QStyledItemDelegate, QStyle
+from PySide6.QtWidgets import QListView, QStyleOptionViewItem, QStyledItemDelegate
 
 from picture_comparator.model.display_settings import DisplaySettings
 from picture_comparator.model.group_selection_model import GroupSelectionModel

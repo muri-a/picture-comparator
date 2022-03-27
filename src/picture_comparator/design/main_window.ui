@@ -41,11 +41,14 @@
             <enum>QListView::SinglePass</enum>
            </property>
            <property name="batchSize">
-            <number>15</number>
+            <number>100</number>
            </property>
           </widget>
           <widget class="MatchesStackView" name="thumbnails_page"/>
          </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="pager_layout"/>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">

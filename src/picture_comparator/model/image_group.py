@@ -33,11 +33,15 @@ class ImageGroup:
     def has_marked(self) -> bool:
         return any(i.marked_for_deletion for i in self.images)
 
-    def delete_marked(self):
+    def delete_marked(self) -> List[ImageInfo]:
         to_delete = self.marked_for_deletion()
+        not_removed: List[ImageInfo] = []
         for image in to_delete:
-            QFile.moveToTrash(image.path)
-            self.images.remove(image)
+            if QFile.moveToTrash(image.path):
+                self.images.remove(image)
+            else:
+                not_removed.append(image)
+        return not_removed
 
     def __iter__(self) -> Iterable[ImageInfo]:
         return iter(self.images)

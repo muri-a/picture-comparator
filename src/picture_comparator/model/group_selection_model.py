@@ -83,6 +83,7 @@ class MarkingSelection(CurrentSelection):
 
 class GroupSelectionModel(QItemSelectionModel):
     markingChanged = Signal(list)
+    # normalChanged = Signal(None, None)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -126,12 +127,19 @@ class GroupSelectionModel(QItemSelectionModel):
                 elif self.display_settings.display_mode == DisplayMode.ONE_BY_ONE:
                     if len(result_selection) < 2 and before_len >= 2:
                         return
-                    elif len(result_selection) < 2:
+                    elif len(result_selection) == 1:
+                        for i in range(self.model().rowCount()):
+                            if i not in result_selection:
+                                row_index = self.model().createIndex(i, 0)
+                                index = QItemSelection(row_index, row_index)
+                                break
+                    elif len(result_selection) == 0:
                         i = self.model().createIndex(0, 0)
                         j = self.model().createIndex(1, 0)
                         index = QItemSelection(i, j)
                         command = QItemSelectionModel.ClearAndSelect
             super().select(index, command)
+            # self.normalChanged.emit(None, None)
         else:  # When in marking mode:
             if self._current.selecting(index):
                 self.markingChanged.emit(self.markings())  # emit marked

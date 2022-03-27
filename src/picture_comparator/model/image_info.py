@@ -62,7 +62,7 @@ class ImageInfo:
         self.path = path
         self.index: Optional[int] = None
         image = Image.open(path)
-        if image.width * image.height > self.SIZE_LIMIT:
+        if image.width * image.height >= self.SIZE_LIMIT:
             raise ImageTooBigException(path)
         # a_hash = imagehash.average_hash(image)
         hash = imagehash.whash(image)

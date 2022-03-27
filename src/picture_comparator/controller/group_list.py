@@ -51,7 +51,7 @@ class GroupList:
         self.update_selection()
 
     def update_selection(self):
-        index = self.list_view.model().createIndex(0, 0)
+        index = self.list_view.model().createIndex(-1, -1)
         selection = QItemSelection(index, index)
         self.selection.select(selection, QItemSelectionModel.Select)
 
@@ -84,10 +84,16 @@ class GroupList:
                                         f"Do you want to remove marked files?\n{files_list}",
                                         QMessageBox.Apply | QMessageBox.Cancel)
             if reply == QMessageBox.Apply:
-                self.image_group.delete_marked()
+                not_removed = self.image_group.delete_marked()
+                if not_removed:
+                    files_list = ''
+                    for file in not_removed:
+                        files_list += file.path + "\n"
+                    QMessageBox.warning(self.main_window_controller.window, "Unable to remove files.", "Unable to move listed files to trash:\n" + files_list)
                 if len(self.image_group) > 1:
                     self.images.remove_multiple(to_remove)
                     self.update_selection()
+                    self.comparator.update_view()
                 else:
                     # No images to compare. Drop current match group.
                     self.main_window_controller.matches.remove_current_match()
