@@ -96,7 +96,7 @@ class MatchesController:
                 self.page_changed(str(self.current_page - 1))
                 return
 
-        if index + 1 == len(self.all_groups):
+        if index == len(self.all_groups):
             index -= 1
         self.image_groups.remove(selected.data())
 
