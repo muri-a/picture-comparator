@@ -14,6 +14,26 @@ class ImageGroup:
         self.images.extend(images)
         self.images.sort(key=lambda a: a.path)
 
+    def set_identical(self):
+        groups: List[List[ImageInfo]] = []
+        for image in self.images:
+            found = False
+            for group in groups:
+                if image.is_identical(group[0]):
+                    group.append(image)
+                    found = True
+                    break
+            if not found:
+                groups.append([image])
+        id = 0
+        for group in groups:
+            if len(group) > 1:
+                for image in group:
+                    image.identical_group = id
+                id += 1
+            else:
+                group[0].identical_group = None
+
     def merge(self, other: ImageGroup):
         to_add = []
         for image in other:

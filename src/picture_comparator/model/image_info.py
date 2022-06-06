@@ -61,6 +61,7 @@ class ImageInfo:
     def __init__(self, path: str):
         self.path = path
         self.index: Optional[int] = None
+        self.identical_group: Optional[int] = None
         image = Image.open(path)
         if image.width * image.height >= self.SIZE_LIMIT:
             raise ImageTooBigException(path)
@@ -90,6 +91,11 @@ class ImageInfo:
             return False
         mime = magic.from_file(path, mime=True)
         return mime.startswith('image/')
+
+    def is_identical(self, other: ImageInfo) -> bool:
+        if self.width() != other.width() or self.height() != other.height():
+            return False
+        return self.qimage().bits() == other.qimage().bits()  # TODO; check how time consuming it is
 
     def qimage(self, size: QSize = None):
         if self._qimage is None:

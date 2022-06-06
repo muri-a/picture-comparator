@@ -1,7 +1,8 @@
+import random
 from typing import Union, Optional, Iterable
 
-from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QSize, Qt, QRect
-from PySide6.QtGui import QPainter, QResizeEvent, QMouseEvent
+from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QSize, Qt, QRect, QPoint
+from PySide6.QtGui import QPainter, QResizeEvent, QMouseEvent, QPainterPath, QColor
 from PySide6.QtWidgets import QListView, QStyleOptionViewItem, QStyledItemDelegate
 
 from picture_comparator.model.display_settings import DisplaySettings
@@ -14,6 +15,13 @@ from picture_comparator.resources.resources import Resources
 
 
 class GroupListDelegate(QStyledItemDelegate):
+    identical_groups_colors = [
+        QColor.fromRgb(217, 143, 221), QColor.fromRgb(254, 254, 254), QColor.fromRgb(69, 192, 113),
+        QColor.fromRgb(230, 197, 96), QColor.fromRgb(243, 79, 81), QColor.fromRgb(52, 159, 189),
+        QColor.fromRgb(216, 234, 88), QColor.fromRgb(88, 234, 213), QColor.fromRgb(85, 40, 103),
+        QColor.fromRgb(134, 100, 72)
+    ]
+
     def __init__(self):
         super().__init__()
         self._image_group: Optional[ImageGroup]
@@ -21,6 +29,7 @@ class GroupListDelegate(QStyledItemDelegate):
 
     def paint(self, painter: QPainter, option: QStyleOptionViewItem,
               index: Union[QModelIndex, QPersistentModelIndex]) -> None:
+        painter.setRenderHint(QPainter.Antialiasing)
         image: ImageInfo = index.model().data(index, Qt.DisplayRole)
         # Adjust thumbnail size if scroll bar is to be showed
         qimg = image.qimage(option.rect.size())
@@ -31,6 +40,15 @@ class GroupListDelegate(QStyledItemDelegate):
             color.setAlphaF(.6)
             brush.setColor(color)
             painter.fillRect(option.rect, color)
+        if image.identical_group is not None:
+            path = QPainterPath()
+            path.addEllipse(QPoint(option.rect.x() + 10, option.rect.y() + 10), 7, 7)
+            painter.pen().setWidth(2)
+            painter.strokePath(path, painter.pen())
+            while image.identical_group >= len(self.identical_groups_colors):
+                # Unlikely to happen, so we just pick a random color
+                self.identical_groups_colors.append(Qt.rgba(random.random(), random.random(), random.random(), 1))
+            painter.fillPath(path, self.identical_groups_colors[image.identical_group])
         if image.marked_for_deletion:
             icon_height = option.rect.height() // 2
             scaled = Resources.delete_marker.scaledToHeight(icon_height)

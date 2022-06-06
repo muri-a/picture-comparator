@@ -46,6 +46,7 @@ class GroupList:
             self.selection.clear()
         image_group.clear_markings()
         self.image_group = image_group
+        self.image_group.set_identical()
         self.images.replace(image_group)
         self.comparator.clear()
         self.update_selection()
