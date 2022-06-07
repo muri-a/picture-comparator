@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Iterable, List
+from typing import Iterable, List, Dict
 
 from PySide6.QtCore import QFile
 
@@ -32,6 +32,23 @@ class ImageGroup:
                     image.identical_group = id
                 id += 1
             else:
+                group[0].identical_group = None
+
+    def reset_identical(self):
+        """
+        Should be run after removing image from group. Searches for markers and if theres only one of given id left,
+        removes the marker.
+        """
+        groups: Dict[int: List[ImageInfo]] = {}
+        for image in self.images:
+            if image.identical_group is not None:
+                group = groups.get(image.identical_group)
+                if not group:
+                    group = []
+                    groups[image.identical_group] = group
+                group.append(image)
+        for group in groups.values():
+            if len(group) == 1:
                 group[0].identical_group = None
 
     def merge(self, other: ImageGroup):

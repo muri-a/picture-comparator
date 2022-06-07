@@ -93,6 +93,7 @@ class GroupList:
                     QMessageBox.warning(self.main_window_controller.window, "Unable to remove files.", "Unable to move listed files to trash:\n" + files_list)
                 if len(self.image_group) > 1:
                     self.images.remove_multiple(to_remove)
+                    self.image_group.reset_identical()
                     self.update_selection()
                     self.comparator.update_view()
                 else:
