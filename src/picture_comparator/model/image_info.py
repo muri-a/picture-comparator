@@ -79,6 +79,9 @@ class ImageInfo:
         self._catche = {}
         self._cache_width: Dict[int, int] = {}
 
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.path})'
+
     @property
     def file_size(self):
         if not self._file_size:

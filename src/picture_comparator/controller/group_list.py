@@ -94,7 +94,10 @@ class GroupList:
                 if len(self.image_group) > 1:
                     self.images.remove_multiple(to_remove)
                     self.image_group.reset_identical()
-                    self.update_selection()
+
+                    # Because of problems with selection after removing item, we just reset it.
+                    new_indexes = self.selection.get_indexes_of_elements(i for i in self.images if i.selected)
+                    self.selection.new_selection(new_indexes)
                     self.comparator.update_view()
                 else:
                     # No images to compare. Drop current match group.

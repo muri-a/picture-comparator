@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Union, Optional, Set
+from typing import Union, Optional, Set, Iterable
 
 from PySide6.QtCore import QItemSelectionModel, QModelIndex, QPersistentModelIndex, QItemSelection, Signal
 
@@ -106,43 +106,59 @@ class GroupSelectionModel(QItemSelectionModel):
     def select(self, index: Union[QModelIndex, QPersistentModelIndex], command: QItemSelectionModel.SelectionFlags) -> None:
         if not isinstance(index, QItemSelection):
             return
-        if self.manual_selection or self._current is None or not isinstance(self._current, MarkingSelection):
-            if not self.manual_selection:
-                # deselected = self._current.get_deselected(index, command) if self._current else []
-                # If display mode is SINGLE, make sure only last changed end up selected
-                before_len = len(self.selection().indexes())
-                result_selection = self._result(index, command)
-                if self.display_settings.display_mode == DisplayMode.SINGLE:
+        if self.manual_selection:
+            super().select(index, command)
+        elif self._current is None or not isinstance(self._current, MarkingSelection):
+            # deselected = self._current.get_deselected(index, command) if self._current else []
+            # If display mode is SINGLE, make sure only last changed end up selected
+            before_len = len(self.selection().indexes())
+            result_selection = self._result(index, command)
+            if self.display_settings.display_mode == DisplayMode.SINGLE:
+                command = QItemSelectionModel.ClearAndSelect
+                if self._current is None:
+                    self._current = CurrentSelection()
+                self._current.selecting(index)
+                if self._current.ending_index is not None:
+                    index = QItemSelection(self._current.ending_index, self._current.ending_index)
+                elif before_len > 0:
+                    index = QItemSelection(first(self.selection().indexes()), first(self.selection().indexes()))
+                else:
+                    i = self.model().createIndex(0, 0)
+                    index = QItemSelection(i, i)
+            elif self.display_settings.display_mode == DisplayMode.ONE_BY_ONE:
+                if len(result_selection) < 2 and before_len >= 2:
+                    return
+                elif len(result_selection) == 1:
+                    for i in range(self.model().rowCount()):
+                        if i not in result_selection:
+                            row_index = self.model().createIndex(i, 0)
+                            index = QItemSelection(row_index, row_index)
+                            break
+                elif len(result_selection) == 0:
+                    i = self.model().createIndex(0, 0)
+                    j = self.model().createIndex(1, 0)
+                    index = QItemSelection(i, j)
                     command = QItemSelectionModel.ClearAndSelect
-                    if self._current is None:
-                        self._current = CurrentSelection()
-                    self._current.selecting(index)
-                    if self._current.ending_index is not None:
-                        index = QItemSelection(self._current.ending_index, self._current.ending_index)
-                    elif before_len > 0:
-                        index = QItemSelection(first(self.selection().indexes()), first(self.selection().indexes()))
-                    else:
-                        i = self.model().createIndex(0, 0)
-                        index = QItemSelection(i, i)
-                elif self.display_settings.display_mode == DisplayMode.ONE_BY_ONE:
-                    if len(result_selection) < 2 and before_len >= 2:
-                        return
-                    elif len(result_selection) == 1:
-                        for i in range(self.model().rowCount()):
-                            if i not in result_selection:
-                                row_index = self.model().createIndex(i, 0)
-                                index = QItemSelection(row_index, row_index)
-                                break
-                    elif len(result_selection) == 0:
-                        i = self.model().createIndex(0, 0)
-                        j = self.model().createIndex(1, 0)
-                        index = QItemSelection(i, j)
-                        command = QItemSelectionModel.ClearAndSelect
             super().select(index, command)
             # self.normalChanged.emit(None, None)
         else:  # When in marking mode:
             if self._current.selecting(index):
                 self.markingChanged.emit(self.markings())  # emit marked
+
+    def get_indexes_of_elements(self, elements: Iterable):
+        indexes = []
+        for i, e in enumerate(self.model().elements):
+            if e in elements:
+                indexes.append(i)
+        return indexes
+
+    def new_selection(self, indexes: Iterable[int]):
+        selection = QItemSelection()
+        for index in indexes:
+            i = self.model().createIndex(index, 0)
+            selection.select(i, i)
+        with self.select_manually:
+            self.select(selection, QItemSelectionModel.ClearAndSelect)
 
     def markings(self):
         """Returns list of marked indexes."""
