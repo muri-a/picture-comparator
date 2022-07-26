@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from typing import Optional, Set, List, Dict
 
+from PIL import UnidentifiedImageError
 from PySide6.QtCore import QObject, QThread, Signal
 from numpy import ndarray
 from sklearn.neighbors import BallTree
@@ -68,7 +69,11 @@ class SearchThread(QThread):
                     image = ImageInfo(path)
                 except ImageTooBigException as e:
                     print(e.args[0])
-                    self.search_engine.ImageTooBig.emit(path)
+                    self.search_engine.LoadingImageFailed.emit('Image too big', path)
+                    continue
+                except UnidentifiedImageError as e:
+                    print(e.args[0])
+                    self.search_engine.LoadingImageFailed.emit('Loading image failed', path)
                     continue
                 self._add_image(image)
         self.search_engine.ImageSearchEnded.emit()
@@ -122,7 +127,7 @@ class SearchThread(QThread):
 
 class SearchEngine(QObject):
     ImageFound = Signal(ImageInfo)
-    ImageTooBig = Signal(str)
+    LoadingImageFailed = Signal(str, str)
     ImageSearchEnded = Signal()
     ResultsReady = Signal(list)
 

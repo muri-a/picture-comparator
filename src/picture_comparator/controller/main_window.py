@@ -24,7 +24,7 @@ class MainWindowController:
         self.window.ui.list_thumbs_button.clicked.connect(self.set_list_thumbs)
         self.window.ui.stacked_thumbs_button.clicked.connect(self.set_stack_thumbs)
         self.search_engine.ImageFound.connect(self.image_found)
-        self.search_engine.ImageTooBig.connect(self.image_too_big)
+        self.search_engine.LoadingImageFailed.connect(self.loading_image_failed)
 
     def start(self):
         self.window.show()
@@ -45,8 +45,8 @@ class MainWindowController:
         self.window.ui.statusbar.showMessage(f"Image found: {image.path}")
 
     @Slot()
-    def image_too_big(self, path: str):
-        self.window.ui.statusbar.showMessage(f"Could not load '{path}'. Image too big.")
+    def loading_image_failed(self, reason: str, path: str):
+        self.window.ui.statusbar.showMessage(f"Could not load '{path}'. {reason}.")
 
     @Slot()
     def exit_application(self):
