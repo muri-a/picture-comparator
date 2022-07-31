@@ -11,6 +11,7 @@ def main():
     args = parser.parse_args()
 
     app = QApplication([])
+    # QApplication must be called before using some of qt library elements
     from picture_comparator.controller.application import Application
     application = Application(args)
     application.start()
