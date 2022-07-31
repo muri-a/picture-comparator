@@ -1,6 +1,6 @@
 from typing import List, Union, Any, Iterable
 
-from PySide6.QtCore import Signal, QObject, QAbstractListModel, QModelIndex, QPersistentModelIndex
+from PySide6.QtCore import Signal, QObject, QAbstractListModel, QModelIndex, QPersistentModelIndex, QAbstractTableModel
 from PySide6.QtGui import Qt
 
 
@@ -48,7 +48,7 @@ class WatchedList(QObject):
             self.ContentChanged.emit()
 
 
-class WatchedListModel(QAbstractListModel):
+class WatchedListModel(QAbstractTableModel):
     def __init__(self, elements: WatchedList = None):
         super().__init__()
         self.elements = None
@@ -81,12 +81,15 @@ class WatchedListModel(QAbstractListModel):
     def rowCount(self, parent: Union[QModelIndex, QPersistentModelIndex] = ...) -> int:
         return len(self.elements) if self.elements else 0
 
+    def columnCount(self, parent: Union[QModelIndex, QPersistentModelIndex] = ...) -> int:
+        return 1
+
     def data(self, index: Union[QModelIndex, QPersistentModelIndex], role: int = ...):
         if not index.isValid() or index.row() >= len(self.elements) or role != Qt.DisplayRole:
             return None
         return self.elements[index.row()]
 
     def _element_added(self, _: Any, index: int):
-        self.beginInsertRows(QModelIndex(), len(self.elements) - 1, len(self.elements))
+        self.beginInsertRows(QModelIndex(), index, index)
         self.endInsertRows()
         return self.index(index, 0, QModelIndex())

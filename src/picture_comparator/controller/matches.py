@@ -5,7 +5,9 @@ from PySide6.QtCore import Slot, Qt, QItemSelection, QItemSelectionModel
 from PySide6.QtWidgets import QHBoxLayout, QLabel
 
 from picture_comparator.controller.group_list import GroupList
+from picture_comparator.controller.log import LogController
 from picture_comparator.model.image_group import ImageGroup
+from picture_comparator.model.log_engine import LogMessage, LogType
 from picture_comparator.model.search_engine import SearchEngine
 from picture_comparator.model.utils import first
 from picture_comparator.model.watched_list import WatchedList, WatchedListModel
@@ -23,6 +25,7 @@ class MatchesController:
         self.pager_labels: List[QLabel] = []
         self.list_view: MatchesListView = self.main_window_controller.window.ui.full_view_page
         self.list_view_model = WatchedListModel()
+        self.log: LogController = self.main_window_controller.log
 
         self.all_groups: List[ImageGroup] = []
         self.current_page: int = 0
@@ -52,7 +55,7 @@ class MatchesController:
     def results_ready(self, groups: List[ImageGroup]):
         self.all_groups = groups
         self.image_groups = WatchedList(groups[:self.GROUPS_PER_PAGE])
-        self.main_window_controller.window.ui.statusbar.showMessage(f"Search finished.")
+        self.log.log_message(LogMessage(LogType.INFO, "Search finished.", True))
         self.list_view_model.set_list(self.image_groups)
         # Prepare pager
         pages = self.pages_count

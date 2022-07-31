@@ -3,9 +3,11 @@ from PySide6.QtWidgets import QApplication
 
 from picture_comparator.controller.action_buttons import ActionButtonsController
 from picture_comparator.controller.group_list import GroupList
+from picture_comparator.controller.log import LogController
 from picture_comparator.controller.matches import MatchesController
 from picture_comparator.controller.settings import Settings
 from picture_comparator.model.image_info import ImageInfo
+from picture_comparator.model.log_engine import LogMessage, LogType
 from picture_comparator.model.search_engine import SearchEngine
 from picture_comparator.view.main_window import MainWindow
 
@@ -14,6 +16,7 @@ class MainWindowController:
     def __init__(self, settings: Settings):
         self.settings: Settings = settings
         self.window = MainWindow()
+        self.log = LogController(self.window)
         self.search_engine = SearchEngine(settings)
         self.action_buttons = ActionButtonsController(self)
 
@@ -21,6 +24,8 @@ class MainWindowController:
         self.matches = MatchesController(self)
 
         self.window.ui.action_quit.triggered.connect(self.exit_application)
+        self.window.ui.action_show_log.triggered.connect(self.show_log)
+
         self.window.ui.list_thumbs_button.clicked.connect(self.set_list_thumbs)
         self.window.ui.stacked_thumbs_button.clicked.connect(self.set_stack_thumbs)
         self.search_engine.ImageFound.connect(self.image_found)
@@ -42,11 +47,15 @@ class MainWindowController:
 
     @Slot()
     def image_found(self, image: ImageInfo):
-        self.window.ui.statusbar.showMessage(f"Image found: {image.path}")
+        self.log.log_message(LogMessage(LogType.INFO, f"Image found: {image.path}", True))
 
     @Slot()
     def loading_image_failed(self, reason: str, path: str):
-        self.window.ui.statusbar.showMessage(f"Could not load '{path}'. {reason}.")
+        self.log.log_message(LogMessage(LogType.ERROR, f"Could not load '{path}'. {reason}.", True))
+
+    @Slot()
+    def show_log(self):
+        self.log.show()
 
     @Slot()
     def exit_application(self):

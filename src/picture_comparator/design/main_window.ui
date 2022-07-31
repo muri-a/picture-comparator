@@ -275,7 +275,7 @@
      <x>0</x>
      <y>0</y>
      <width>1110</width>
-     <height>30</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -284,7 +284,14 @@
     </property>
     <addaction name="action_quit"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="action_show_log"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_quit">
@@ -293,6 +300,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_show_log">
+   <property name="text">
+    <string>Show log</string>
    </property>
   </action>
  </widget>

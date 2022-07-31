@@ -8,7 +8,6 @@ from picture_comparator.controller.settings import Settings
 
 
 class Application(QObject):
-
     def __init__(self, args):
         super().__init__()
         self.settings = Settings(args)
