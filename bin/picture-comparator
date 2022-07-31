@@ -1,0 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: UTF-8 -*-
+from picture_comparator import main
+
+if __name__ == '__main__':
+    main.main()
