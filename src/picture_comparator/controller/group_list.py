@@ -77,26 +77,22 @@ class GroupList:
     @Slot()
     def delete_marked(self, *args):
         if self.image_group and self.image_group.has_marked():
-            to_remove = self.image_group.marked_for_deletion()
-            files_list = ''
-            for file in to_remove:
-                files_list += file.path + "\n"
+            to_remove: List[ImageInfo] = self.image_group.marked_for_deletion()
+            file_list: str = '\n'.join(file.path for file in to_remove)
             reply = QMessageBox.warning(self.main_window_controller.window, "Move to the trash?",
-                                        f"Do you want to remove marked files?\n{files_list}",
+                                        f"Do you want to remove marked files?\n{file_list}",
                                         QMessageBox.Apply | QMessageBox.Cancel)
             if reply == QMessageBox.Apply:
                 not_removed = self.image_group.delete_marked()
                 if not_removed:
-                    files_list = ''
-                    for file in not_removed:
-                        files_list += file.path + "\n"
-                    QMessageBox.warning(self.main_window_controller.window, "Unable to remove files.", "Unable to move listed files to trash:\n" + files_list)
+                    file_list = '\n'.join(image.path for image in not_removed)
+                    QMessageBox.warning(self.main_window_controller.window, "Unable to remove files.", "Unable to move listed files to trash:\n" + file_list)
                 if len(self.image_group) > 1:
                     self.images.remove_multiple(to_remove)
                     self.image_group.reset_identical()
 
                     # Because of problems with selection after removing item, we just reset it.
-                    new_indexes = self.selection.get_indexes_of_elements(i for i in self.images if i.selected)
+                    new_indexes = self.selection.get_indexes_of_elements([i for i in self.images if i.selected])
                     self.selection.new_selection(new_indexes)
                     self.comparator.update_view()
                 else:

@@ -60,7 +60,7 @@ class ImageInfo:
 
     def __init__(self, path: str):
         self.path = path
-        self.index: Optional[int] = None
+        self.index: Optional[int] = None  # Index in list of all found images
         self.identical_group: Optional[int] = None
         image = Image.open(path)
         if image.width * image.height >= self.SIZE_LIMIT:

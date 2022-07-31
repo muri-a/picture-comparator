@@ -52,6 +52,8 @@ class SearchThread(QThread):
     def run(self) -> None:
         self._scan_files()
         self._find_results()
+        self.images.clear()
+        self.images_hash_map.clear()
 
     def _scan_files(self):
         for directory in self.settings.directories:
@@ -94,16 +96,16 @@ class SearchThread(QThread):
         X = [image.hash for image in self.images]
         self.image_tree = BallTree(X)
         self.raw_results = self.image_tree.query_radius(X, 3)
-        for i, result in enumerate(self.raw_results):
+        for result in self.raw_results:
             if len(result) < 2:
                 continue
             main_group = None  # group to which all other groups will be merged if there are multiple ones
-            new = []  # indices for images that weren't part of any group previously
+            new_group = []  # indices for images that weren't part of any group previously
 
             for index in result:
                 group = self.group_map.get(index)
                 if not group:
-                    new.append(index)
+                    new_group.append(index)
                 elif main_group is None:
                     main_group = group
                 elif main_group is not group:
@@ -116,9 +118,9 @@ class SearchThread(QThread):
                 main_group = ImageGroup()
                 self.groups.append(main_group)
 
-            images = [self.images[i] for i in new]
+            images = [self.images[i] for i in new_group]
             main_group.add_images(images)
-            for index in new:
+            for index in new_group:
                 self.group_map[index] = main_group
 
         self.search_engine.ResultsReady.emit(self.groups)

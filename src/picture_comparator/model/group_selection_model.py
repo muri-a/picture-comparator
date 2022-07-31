@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Union, Optional, Set, Iterable
+from typing import Union, Optional, Set, Iterable, Sequence
 
 from PySide6.QtCore import QItemSelectionModel, QModelIndex, QPersistentModelIndex, QItemSelection, Signal
 
@@ -145,7 +145,7 @@ class GroupSelectionModel(QItemSelectionModel):
             if self._current.selecting(index):
                 self.markingChanged.emit(self.markings())  # emit marked
 
-    def get_indexes_of_elements(self, elements: Iterable):
+    def get_indexes_of_elements(self, elements: Sequence):
         indexes = []
         for i, e in enumerate(self.model().elements):
             if e in elements:
