@@ -1,6 +1,6 @@
 from PySide6.QtCore import Signal, Qt
-from PySide6.QtGui import QKeyEvent
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtGui import QKeyEvent, QCloseEvent
+from PySide6.QtWidgets import QMainWindow, QApplication
 
 from picture_comparator.view.main_window_ui import Ui_MainWindow
 
@@ -29,3 +29,6 @@ class MainWindow(QMainWindow):
         elif event.key() == Qt.Key_Delete:
             self.DeleteKeyPressed.emit()
         event.accept()
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        QApplication.quit()

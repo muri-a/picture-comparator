@@ -4,7 +4,7 @@ from PySide6.QtCore import QSettings
 
 
 class Settings:
-    """Helps interacting with settings."""
+    """Helps to interact with settings."""
     def __init__(self, args):
         self.qt_settings = QSettings('armas', 'picture_comparator')
         self.directories: List[str] = args.directories

@@ -3,8 +3,6 @@ from argparse import ArgumentParser
 
 from PySide6.QtWidgets import QApplication
 
-from picture_comparator.controller.application import Application
-
 
 def main():
     parser = ArgumentParser(description="GUI application searching for similar images in a set.")
@@ -13,6 +11,7 @@ def main():
     args = parser.parse_args()
 
     app = QApplication([])
+    from picture_comparator.controller.application import Application
     application = Application(args)
     application.start()
     sys.exit(app.exec())
