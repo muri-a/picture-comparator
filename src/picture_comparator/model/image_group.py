@@ -36,7 +36,7 @@ class ImageGroup:
 
     def reset_identical(self):
         """
-        Should be run after removing image from group. Searches for markers and if theres only one of given id left,
+        Should be run after removing image from group. Searches for markers and if there's only one of given id left,
         removes the marker.
         """
         groups: Dict[int: List[ImageInfo]] = {}
@@ -74,7 +74,7 @@ class ImageGroup:
         to_delete = self.marked_for_deletion()
         not_removed: List[ImageInfo] = []
         for image in to_delete:
-            if QFile.moveToTrash(image.path):
+            if True:  # QFile.moveToTrash(image.path):
                 self.images.remove(image)
             else:
                 not_removed.append(image)

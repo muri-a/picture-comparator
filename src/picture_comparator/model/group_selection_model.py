@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Union, Optional, Set, Iterable, Sequence
+from typing import Union, Optional, Set, Sequence, List
 
 from PySide6.QtCore import QItemSelectionModel, QModelIndex, QPersistentModelIndex, QItemSelection, Signal
 
@@ -107,7 +107,9 @@ class GroupSelectionModel(QItemSelectionModel):
         if not isinstance(index, QItemSelection):
             return
         if self.manual_selection:
+            old_selection = self.selection()
             super().select(index, command)
+            self.selectionChanged.emit(self.selection(), old_selection)
         elif self._current is None or not isinstance(self._current, MarkingSelection):
             # deselected = self._current.get_deselected(index, command) if self._current else []
             # If display mode is SINGLE, make sure only last changed end up selected
@@ -126,7 +128,7 @@ class GroupSelectionModel(QItemSelectionModel):
                     i = self.model().createIndex(0, 0)
                     index = QItemSelection(i, i)
             elif self.display_settings.display_mode == DisplayMode.ONE_BY_ONE:
-                if len(result_selection) < 2 and before_len >= 2:
+                if before_len >= 2 and len(result_selection) < 2:
                     return
                 elif len(result_selection) == 1:
                     for i in range(self.model().rowCount()):
@@ -152,7 +154,19 @@ class GroupSelectionModel(QItemSelectionModel):
                 indexes.append(i)
         return indexes
 
-    def new_selection(self, indexes: Iterable[int]):
+    def new_selection(self, indexes: List[int]):
+        """Manually """
+        if self.display_settings.display_mode == DisplayMode.SINGLE:
+            if len(indexes) > 1:
+                indexes = indexes[:1]
+            elif len(indexes) < 1:
+                indexes = [0]
+        elif self.display_settings.display_mode == DisplayMode.ONE_BY_ONE:
+            i = 0
+            while len(indexes) < 2:
+                if i not in indexes:
+                    indexes.append(i)
+                i += 1
         selection = QItemSelection()
         for index in indexes:
             i = self.model().createIndex(index, 0)
