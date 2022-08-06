@@ -2,7 +2,7 @@ import random
 from typing import Union, Optional, Iterable
 
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QSize, Qt, QRect, QPoint
-from PySide6.QtGui import QPainter, QResizeEvent, QMouseEvent, QPainterPath, QColor
+from PySide6.QtGui import QPainter, QResizeEvent, QMouseEvent, QPainterPath, QColor, QIcon
 from PySide6.QtWidgets import QListView, QStyleOptionViewItem, QStyledItemDelegate
 
 from picture_comparator.model.display_settings import DisplaySettings
@@ -21,6 +21,7 @@ class GroupListDelegate(QStyledItemDelegate):
         QColor.fromRgb(216, 234, 88), QColor.fromRgb(88, 234, 213), QColor.fromRgb(85, 40, 103),
         QColor.fromRgb(134, 100, 72)
     ]
+    link_icon = QIcon.fromTheme('emblem-symbolic-link').pixmap(20, 20)
 
     def __init__(self):
         super().__init__()
@@ -34,6 +35,10 @@ class GroupListDelegate(QStyledItemDelegate):
         # Adjust thumbnail size if scroll bar is to be showed
         qimg = image.qimage(option.rect.size())
         painter.drawImage(option.rect, qimg)
+        if image.is_link:
+            link_position_x = option.rect.x() + option.rect.width() - self.link_icon.width() - 5
+            link_position_y = option.rect.y() + 5
+            painter.drawPixmap(link_position_x, link_position_y, self.link_icon)
         if image.selected:  # option.state & QStyle.State_Selected doesn't work correctly
             brush = option.palette.highlight()
             color = brush.color()

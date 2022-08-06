@@ -58,8 +58,9 @@ class ImageQuality:
 class ImageInfo:
     SIZE_LIMIT = 0x2000000
 
-    def __init__(self, path: str):
+    def __init__(self, path: str, realpath: str):
         self.path = path
+        self.real_path = realpath
         self.index: Optional[int] = None  # Index in list of all found images
         self.identical_group: Optional[int] = None
         image = Image.open(path)
@@ -88,12 +89,20 @@ class ImageInfo:
             self._file_size = os.path.getsize(self.path)
         return self._file_size
 
-    @staticmethod
-    def is_image(path: str):
-        if not os.path.exists(path):
-            return False
-        mime = magic.from_file(path, mime=True)
-        return mime.startswith('image/')
+    @property
+    def is_link(self) -> bool:
+        return self.path != self.real_path
+
+    @classmethod
+    def from_path_if_image(cls, path: str) -> Optional[ImageInfo]:
+        path: str = os.path.abspath(path)
+        realpath: str = os.path.realpath(path)
+        if not os.path.exists(realpath):
+            return None
+        mime = magic.from_file(realpath, mime=True)
+        if not mime.startswith('image/'):
+            return None
+        return cls(path, realpath)
 
     def is_identical(self, other: ImageInfo) -> bool:
         if self.width() != other.width() or self.height() != other.height():

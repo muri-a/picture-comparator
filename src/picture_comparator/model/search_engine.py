@@ -62,13 +62,13 @@ class SearchThread(QThread):
     def _add_directory(self, directory: str):
         self.all_dirs.add(directory)
         for file in os.listdir(directory):
-            path = os.path.realpath(os.path.join(directory, file))
+            path = os.path.join(directory, file)
             if os.path.isdir(path):
                 if self.settings.scan_subdirectories and path not in self.all_dirs:
                     self._add_directory(path)
-            elif ImageInfo.is_image(path):
+            else:
                 try:
-                    image = ImageInfo(path)
+                    image = ImageInfo.from_path_if_image(path)
                 except ImageTooBigException as e:
                     print(e.args[0])
                     self.search_engine.LoadingImageFailed.emit('Image too big', path)
@@ -77,7 +77,8 @@ class SearchThread(QThread):
                     print(e.args[0])
                     self.search_engine.LoadingImageFailed.emit('Loading image failed', path)
                     continue
-                self._add_image(image)
+                if image:
+                    self._add_image(image)
         self.search_engine.ImageSearchEnded.emit()
 
     def _add_image(self, image: ImageInfo):

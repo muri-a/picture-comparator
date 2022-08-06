@@ -74,7 +74,7 @@ class ImageGroup:
         to_delete = self.marked_for_deletion()
         not_removed: List[ImageInfo] = []
         for image in to_delete:
-            if True:  # QFile.moveToTrash(image.path):
+            if QFile.moveToTrash(image.path):
                 self.images.remove(image)
             else:
                 not_removed.append(image)
