@@ -91,7 +91,7 @@ class ImageInfo:
 
     @property
     def is_link(self) -> bool:
-        return self.path != self.real_path
+        return os.path.islink(self.path)
 
     @classmethod
     def from_path_if_image(cls, path: str) -> Optional[ImageInfo]:
