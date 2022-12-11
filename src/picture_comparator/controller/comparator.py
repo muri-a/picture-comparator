@@ -24,4 +24,4 @@ class Comparator:
         self.compare_widget.set_images(images, group_changed)
 
     def update_view(self):
-        self.compare_widget.update()
+        self.compare_widget.repaint()

@@ -14,9 +14,8 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.splitter.setStretchFactor(0, 1)
-        self.ui.splitter.setStretchFactor(1, 4)
-        self.ui.splitter_2.setStretchFactor(0, 4)
+        self.ui.splitter.setSizes([500, 99999])
+        self.ui.splitter_2.setStretchFactor(0, 8)
         self.ui.splitter_2.setStretchFactor(1, 1)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:

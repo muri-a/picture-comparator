@@ -103,5 +103,15 @@ class GroupList:
 
     @Slot()
     def show_rename_dialog(self):
-        dialog = RenamerDialog(self.main_window_controller.window)
-        dialog.exec()
+        if not self.image_group:
+            return
+        dialog = RenamerDialog(self.main_window_controller.window, self.image_group, [i for i in self.images if i.selected])
+        result = dialog.exec()
+        if result:
+            renames = dialog.file_system_model.filter.renames
+            self.image_group.rename(renames)
+            self.images.replace(self.image_group)
+            # Reselect elements, as changing images breaks selection model
+            images = [image for image in self.images if image.selected]
+            indexes = self.selection.get_indexes_of_elements(images)
+            self.selection.new_selection(indexes)

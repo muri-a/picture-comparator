@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1000</width>
+    <height>468</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,127 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTreeView" name="treeView"/>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Show</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="show_selected_button">
+       <property name="text">
+        <string>Selected</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="show_group_button">
+       <property name="text">
+        <string>Group</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="show_images_button">
+       <property name="text">
+        <string>All Images</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="show_all_button">
+       <property name="text">
+        <string>All Files</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="show_hidden_button">
+       <property name="text">
+        <string>Show Hidden</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="enable_all_button">
+       <property name="toolTip">
+        <string>Allow editing of all visible files.</string>
+       </property>
+       <property name="text">
+        <string>Enable All</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="RenamerFileTreeView" name="file_view">
+     <property name="acceptDrops">
+      <bool>true</bool>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+     </property>
+     <property name="dragEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::InternalMove</enum>
+     </property>
+     <property name="defaultDropAction">
+      <enum>Qt::MoveAction</enum>
+     </property>
+     <property name="sortingEnabled">
+      <bool>false</bool>
+     </property>
+     <attribute name="headerVisible">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="headerDefaultSectionSize">
+      <number>200</number>
+     </attribute>
+     <column>
+      <property name="text">
+       <string notr="true">1</string>
+      </property>
+     </column>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -29,6 +149,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>RenamerFileTreeView</class>
+   <extends>QTreeWidget</extends>
+   <header>picture_comparator/view/renamer_file_tree_view</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

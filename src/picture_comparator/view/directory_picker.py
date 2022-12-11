@@ -1,20 +1,13 @@
 import os.path
 from itertools import chain
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from PySide6.QtCore import QDir, QModelIndex, QStringListModel, QSortFilterProxyModel, QPersistentModelIndex, Qt
 from PySide6.QtWidgets import QDialog, QFileSystemModel, QDialogButtonBox
 
+from picture_comparator.utils import path_from_index
 from picture_comparator.view.directory_picker_ui import Ui_Dialog
-
-
-def path_from_index(index: QModelIndex):
-    path = []
-    while index.isValid():
-        path.insert(0, index.data())
-        index = index.parent()
-    return path
 
 
 class DotDotInCurrentFilterModel(QSortFilterProxyModel):

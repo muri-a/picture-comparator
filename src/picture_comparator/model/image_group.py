@@ -80,6 +80,12 @@ class ImageGroup:
                 not_removed.append(image)
         return not_removed
 
+    def rename(self, renames: Dict[str, str]):
+        for image in self.images:
+            if image.path in renames:
+                image.path = renames[image.path]
+        self.images.sort(key=lambda a: a.path)
+
     def __iter__(self) -> Iterable[ImageInfo]:
         return iter(self.images)
 
