@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1110</width>
-    <height>752</height>
+    <width>1145</width>
+    <height>815</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -239,10 +239,16 @@
         </layout>
        </widget>
        <widget class="GroupListView" name="current_group_list_view">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="baseSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>500</height>
          </size>
         </property>
         <property name="verticalScrollBarPolicy">
@@ -274,7 +280,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1110</width>
+     <width>1145</width>
      <height>23</height>
     </rect>
    </property>

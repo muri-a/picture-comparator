@@ -11,6 +11,7 @@ from PySide6.QtGui import QImage
 from wand.image import Image as WImage
 
 from picture_comparator.model.exceptions import ImageTooBigException
+from picture_comparator.model.file import FileInfo
 
 
 class ImageQuality:
@@ -150,6 +151,8 @@ class ImageInfo:
         return hash(self.path)
 
     def __eq__(self, other):
+        if isinstance(other, FileInfo):
+            return self.path == other.path
         if not isinstance(other, ImageInfo):
             return False
         return self.path == other.path

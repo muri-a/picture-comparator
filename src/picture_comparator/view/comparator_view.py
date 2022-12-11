@@ -12,6 +12,7 @@ from PySide6.QtWidgets import QWidget
 
 from picture_comparator.model.display_settings import DisplaySettings, Zoom
 from picture_comparator.model.image_info import ImageInfo, ImageQuality
+from picture_comparator.utils import readable_size
 
 
 class InfoState(Enum):
@@ -57,7 +58,10 @@ class PathAttribute(InfoAttribute):
             str_paths = [p.value for p in paths]
             common = os.path.commonpath(str_paths)
             for path in paths:
-                path.raw_text = path.value[len(common) + 1:]
+                if common != '/':
+                    path.raw_text = path.value[len(common) + 1:]
+                else:
+                    path.raw_text = path.value
         else:
             for path in paths:
                 path.raw_text = os.path.basename(path.value)
@@ -88,12 +92,7 @@ class ResolutionAttribute(InfoAttribute):
 class FileSizeAttribute(InfoAttribute):
     def __init__(self, file_size: int):
         super().__init__(file_size)
-        if not file_size >> 10:
-            self.raw_text = str(file_size) + ' B'
-        elif not file_size >> 20:
-            self.raw_text = str(round(file_size / 0x400, 2)) + ' kB'
-        elif not file_size >> 30:
-            self.raw_text = str(round(file_size / 0x100000, 2)) + ' MB'
+        self.raw_text = readable_size(file_size)
 
     @staticmethod
     def mark_best_worst(sizes: List[FileSizeAttribute]):

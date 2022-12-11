@@ -1,4 +1,4 @@
-import random
+from random import randint
 from typing import Union, Optional, Iterable
 
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QSize, Qt, QRect, QPoint
@@ -52,7 +52,7 @@ class GroupListDelegate(QStyledItemDelegate):
             painter.strokePath(path, painter.pen())
             while image.identical_group >= len(self.identical_groups_colors):
                 # Unlikely to happen, so we just pick a random color
-                self.identical_groups_colors.append(Qt.rgba(random.random(), random.random(), random.random(), 1))
+                self.identical_groups_colors.append(QColor.fromRgb(randint(0, 255), randint(0, 255), randint(0, 255)))
             painter.fillPath(path, self.identical_groups_colors[image.identical_group])
         if image.marked_for_deletion:
             icon_height = option.rect.height() // 2

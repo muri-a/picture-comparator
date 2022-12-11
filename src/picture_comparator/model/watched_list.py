@@ -1,6 +1,6 @@
 from typing import List, Union, Any, Iterable
 
-from PySide6.QtCore import Signal, QObject, QAbstractListModel, QModelIndex, QPersistentModelIndex, QAbstractTableModel
+from PySide6.QtCore import Signal, QObject, QModelIndex, QPersistentModelIndex, QAbstractTableModel
 from PySide6.QtGui import Qt
 
 

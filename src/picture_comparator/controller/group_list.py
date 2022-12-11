@@ -12,6 +12,7 @@ from picture_comparator.model.image_info import ImageInfo
 from picture_comparator.model.watched_list import WatchedList
 from picture_comparator.view.group_list_view import GroupListView
 from picture_comparator.view.main_window_ui import Ui_MainWindow
+from picture_comparator.view.renamer_dialog import RenamerDialog
 
 
 class GroupList:
@@ -36,6 +37,7 @@ class GroupList:
         self.action_buttons.DisplayModeChanged.connect(self.display_mode_changed)
         self.delete_button.clicked.connect(self.delete_marked)
         self.main_window_controller.window.DeleteKeyPressed.connect(self.delete_marked)
+        self.main_window_controller.window.RenameKeyPressed.connect(self.show_rename_dialog)
 
     @property
     def ui(self) -> Ui_MainWindow:
@@ -98,3 +100,18 @@ class GroupList:
                 else:
                     # No images to compare. Drop current match group.
                     self.main_window_controller.matches.remove_current_match()
+
+    @Slot()
+    def show_rename_dialog(self):
+        if not self.image_group:
+            return
+        dialog = RenamerDialog(self.main_window_controller.window, self.image_group, [i for i in self.images if i.selected])
+        result = dialog.exec()
+        if result:
+            renames = dialog.file_system_model.filter.renames
+            self.image_group.rename(renames)
+            self.images.replace(self.image_group)
+            # Reselect elements, as changing images breaks selection model
+            images = [image for image in self.images if image.selected]
+            indexes = self.selection.get_indexes_of_elements(images)
+            self.selection.new_selection(indexes)
