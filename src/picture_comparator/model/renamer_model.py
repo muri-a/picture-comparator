@@ -226,20 +226,6 @@ class RenamerModel(QAbstractItemModel):
             return self.filter.flags(index.internalPointer())
         return Qt.ItemIsEnabled | Qt.ItemNeverHasChildren
 
-    # def hasIndex(self, row: int, column: int, parent: Union[QModelIndex, QPersistentModelIndex] = ...) -> bool:
-    #     if super().hasIndex(row, column, parent):
-    #         return True
-    #     if column >= 2:
-    #         return False
-    #     indexes = 0
-    #     if parent.isValid():
-    #         parent_file = parent.internalPointer()
-    #     else:
-    #         indexes = 1
-    #         parent_file = self.file
-    #     indexes += len(self.filter.visible_children(parent_file, disable_sorting=True))
-    #     return row < indexes
-
     def index(self, row: int, column: int, parent: Union[QModelIndex, QPersistentModelIndex] = ...) -> QModelIndex:
         if not self.hasIndex(row, column, parent):
             return QModelIndex()
@@ -378,7 +364,6 @@ class RenamerModel(QAbstractItemModel):
                     self.layoutChanged.emit()
                     view: QTreeView = self.widget.ui.file_view
                     view.selectionModel().clearSelection()
-        # r = super().dropMimeData(data, action, row, column, parent)
         return any_changed
 
 
