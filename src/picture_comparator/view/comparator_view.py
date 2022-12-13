@@ -370,7 +370,8 @@ class CompareWidget(QWidget):
                 # relative to mouse position
                 before = self.leading_section.zoom
                 after = self.leading_section.zoom + step / 1000
-                if before < 1 and after > 1 or before > 1 and after < 1:
+                # Stop at 100 when landing near
+                if before < 1 < after or before > 1 > after:
                     after = 1
                 self.leading_section.zoom = after
                 self.adjust_zoom_to_leader()
