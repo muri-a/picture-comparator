@@ -2,7 +2,7 @@ import math
 from typing import List, Optional
 
 from PySide6.QtCore import Slot, Qt, QItemSelection, QItemSelectionModel
-from PySide6.QtWidgets import QHBoxLayout, QLabel
+from PySide6.QtWidgets import QHBoxLayout, QPushButton, QButtonGroup, QScrollBar
 
 from picture_comparator.controller.group_list import GroupList
 from picture_comparator.controller.log import LogController
@@ -22,7 +22,7 @@ class MatchesController:
         self.main_window_controller = main_window_controller
         self.current_matches_view = self.ui.full_view_page
         self.pager: QHBoxLayout = self.ui.pager_layout
-        self.pager_labels: List[QLabel] = []
+        self.pager_button_group = QButtonGroup()
         self.list_view: MatchesListView = self.main_window_controller.window.ui.full_view_page
         self.list_view_model = WatchedListModel()
         self.log: LogController = self.main_window_controller.log
@@ -34,6 +34,7 @@ class MatchesController:
         self.search_engine.ResultsReady.connect(self.results_ready)
         self.list_view.setModel(self.list_view_model)
         self.list_view.selectionModel().selectionChanged.connect(self.result_changed)
+        self.pager_button_group.buttonClicked.connect(self.pager_button_clicked)
 
     @property
     def ui(self) -> Ui_MainWindow:
@@ -59,23 +60,28 @@ class MatchesController:
         self.list_view_model.set_list(self.image_groups)
         # Prepare pager
         pages = self.pages_count
-        if pages > 1 or True:
+        if pages > 1:
             for i in range(pages):
-                label = QLabel(f'<a href="{i}">{i + 1}</a>')
+                label = QPushButton(f'{i + 1}')
+                label.setCheckable(True)
+                label.setFixedWidth(20)
                 if i == 0:
-                    label.setEnabled(False)
+                    label.setChecked(True)
                 self.pager.addWidget(label)
-                self.pager_labels.append(label)
-                label.linkActivated.connect(self.page_changed)
+                self.pager_button_group.addButton(label)
+            self.pager.addStretch()
 
     @Slot()
-    def page_changed(self, page: str):
-        new_page = int(page)
-        for i, page in enumerate(self.pager_labels):
-            page.setEnabled(i != new_page)
-        page_start = new_page * self.GROUPS_PER_PAGE
-        self.image_groups.replace(self.all_groups[page_start: page_start + self.GROUPS_PER_PAGE])
-        self.current_page = new_page
+    def pager_button_clicked(self, button: QPushButton):
+        new_page = self.pager_button_group.buttons().index(button)
+        self.change_current_page(new_page)
+
+    def change_current_page(self, new_page: int):
+        if self.current_page != new_page:
+            page_start = new_page * self.GROUPS_PER_PAGE
+            self.image_groups.replace(self.all_groups[page_start: page_start + self.GROUPS_PER_PAGE])
+            self.current_page = new_page
+            self.ui.full_view_page.verticalScrollBar().triggerAction(QScrollBar.SliderToMinimum)
 
     @Slot()
     def result_changed(self, current: QItemSelection, _: QItemSelection):
@@ -91,12 +97,17 @@ class MatchesController:
         global_index = self.current_page * self.GROUPS_PER_PAGE + index
         del self.all_groups[global_index]
 
-        if self.pages_count < len(self.pager_labels):
+        if self.pages_count < len(self.pager_button_group.buttons()):
             # Remove last page
-            self.pager.removeWidget(self.pager_labels[-1])
-            del self.pager_labels[-1]
+            last_button = self.pager_button_group.buttons()[-1]
+            self.pager.removeWidget(last_button)
+            self.pager_button_group.removeButton(last_button)
+            # As we decided to use dynamically created layout instead of list and as it turns out "removeWidget" doesn't
+            # work as expected, for now we just hide last button as a workaround
+            last_button.hide()
             if self.current_page == self.pages_count:
-                self.page_changed(str(self.current_page - 1))
+                self.change_current_page(self.current_page - 1)
+                self.pager_button_group.buttons()[-1].setChecked(True)
                 return
 
         if index == len(self.all_groups):
