@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>169</height>
+    <height>170</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>New Name</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="sizeConstraint">

@@ -23,7 +23,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(500, 169)
+        Dialog.resize(500, 170)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -82,7 +82,7 @@ class Ui_Dialog(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
+        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"New Name", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"Insert new name for {old_name}.", None))
         self.file_exists_warning.setText(QCoreApplication.translate("Dialog", u"Given name already exists.", None))
     # retranslateUi

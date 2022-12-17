@@ -47,6 +47,6 @@ class Ui_LogWidget(object):
     # setupUi
 
     def retranslateUi(self, LogWidget):
-        LogWidget.setWindowTitle(QCoreApplication.translate("LogWidget", u"Form", None))
+        LogWidget.setWindowTitle(QCoreApplication.translate("LogWidget", u"Logs", None))
     # retranslateUi
 

@@ -22,8 +22,8 @@ class InfoState(Enum):
 
 
 class InfoAttribute:
-    BEST = QColor.fromRgb(0x4e, 0xa2, 0xdf)  # '#4ea2df'
-    WORST = QColor.fromRgb(0xdf, 0x4e, 0x55)  # '#df4e55'
+    BEST = QColor.fromRgb(0x4b, 0xb0, 0xfa)  # #4bb0fa
+    WORST = QColor.fromRgb(0xF7, 0x7A, 0x80)  # #F77A80
     NEUTRAL = QColor.fromRgb(255, 255, 255)
 
     def __init__(self, value):

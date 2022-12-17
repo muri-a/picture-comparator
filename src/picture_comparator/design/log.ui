@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Logs</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -34,11 +34,11 @@
      <attribute name="horizontalHeaderVisible">
       <bool>false</bool>
      </attribute>
-     <attribute name="horizontalHeaderMinimumSectionSize">
-      <number>60</number>
-     </attribute>
      <attribute name="horizontalHeaderDefaultSectionSize">
       <number>200</number>
+     </attribute>
+     <attribute name="horizontalHeaderMinimumSectionSize">
+      <number>60</number>
      </attribute>
      <attribute name="horizontalHeaderStretchLastSection">
       <bool>true</bool>
