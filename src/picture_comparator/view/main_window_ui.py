@@ -8,23 +8,18 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
-    QCursor, QFont, QFontDatabase, QGradient,
-    QIcon, QImage, QKeySequence, QLinearGradient,
-    QPainter, QPalette, QPixmap, QRadialGradient,
-    QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QFrame, QHBoxLayout,
-    QLayout, QListView, QMainWindow, QMenu,
-    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
-    QSplitter, QStackedWidget, QStatusBar, QVBoxLayout,
-    QWidget)
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QRect, QSize, Qt)
+from PySide6.QtGui import (QAction, QIcon)
+from PySide6.QtWidgets import (QAbstractItemView, QFrame, QHBoxLayout,
+                               QLayout, QListView, QMenu,
+                               QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
+                               QSplitter, QStackedWidget, QStatusBar, QVBoxLayout,
+                               QWidget)
 
 from picture_comparator.view.comparator_view import CompareWidget
 from picture_comparator.view.group_list_view import GroupListView
 from picture_comparator.view.matches_view import (MatchesListView, MatchesStackView)
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -114,7 +109,7 @@ class Ui_MainWindow(object):
         if QIcon.hasThemeIcon(iconThemeName):
             icon = QIcon.fromTheme(iconThemeName)
         else:
-            icon.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+            icon.addFile(u"", QSize(), QIcon.Normal, QIcon.Off)
         
         self.display_multiple_button.setIcon(icon)
         self.display_multiple_button.setCheckable(True)
@@ -130,7 +125,7 @@ class Ui_MainWindow(object):
         if QIcon.hasThemeIcon(iconThemeName):
             icon1 = QIcon.fromTheme(iconThemeName)
         else:
-            icon1.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+            icon1.addFile(u"", QSize(), QIcon.Normal, QIcon.Off)
         
         self.display_single_button.setIcon(icon1)
         self.display_single_button.setCheckable(True)
@@ -148,7 +143,7 @@ class Ui_MainWindow(object):
         if QIcon.hasThemeIcon(iconThemeName):
             icon2 = QIcon.fromTheme(iconThemeName)
         else:
-            icon2.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+            icon2.addFile(u"", QSize(), QIcon.Normal, QIcon.Off)
         
         self.show_info_button.setIcon(icon2)
         self.show_info_button.setCheckable(True)
@@ -164,7 +159,7 @@ class Ui_MainWindow(object):
         if QIcon.hasThemeIcon(iconThemeName):
             icon3 = QIcon.fromTheme(iconThemeName)
         else:
-            icon3.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+            icon3.addFile(u"", QSize(), QIcon.Normal, QIcon.Off)
         
         self.show_zoom_button.setIcon(icon3)
         self.show_zoom_button.setCheckable(True)
@@ -179,7 +174,7 @@ class Ui_MainWindow(object):
         if QIcon.hasThemeIcon(iconThemeName):
             icon4 = QIcon.fromTheme(iconThemeName)
         else:
-            icon4.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+            icon4.addFile(u"", QSize(), QIcon.Normal, QIcon.Off)
         
         self.deleting_mode_button.setIcon(icon4)
         self.deleting_mode_button.setCheckable(True)
@@ -194,7 +189,7 @@ class Ui_MainWindow(object):
         if QIcon.hasThemeIcon(iconThemeName):
             icon5 = QIcon.fromTheme(iconThemeName)
         else:
-            icon5.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+            icon5.addFile(u"", QSize(), QIcon.Normal, QIcon.Off)
         
         self.delete_button.setIcon(icon5)
 
@@ -228,7 +223,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1145, 23))
+        self.menubar.setGeometry(QRect(0, 0, 1145, 35))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuHelp = QMenu(self.menubar)
@@ -253,7 +248,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Picture Comparator", None))
         self.action_quit.setText(QCoreApplication.translate("MainWindow", u"Quit", None))
 #if QT_CONFIG(shortcut)
         self.action_quit.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Q", None))

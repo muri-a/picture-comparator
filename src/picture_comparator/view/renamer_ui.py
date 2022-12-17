@@ -8,19 +8,12 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QDialog,
-    QDialogButtonBox, QHBoxLayout, QHeaderView, QLabel,
-    QPushButton, QSizePolicy, QSpacerItem, QTreeWidgetItem,
-    QVBoxLayout, QWidget)
+from PySide6.QtCore import (QCoreApplication, QMetaObject, Qt)
+from PySide6.QtWidgets import (QAbstractItemView, QDialogButtonBox, QHBoxLayout, QLabel,
+                               QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout)
 
 from picture_comparator.view.renamer_file_tree_view import RenamerFileTreeView
+
 
 class Ui_Renamer(object):
     def setupUi(self, Renamer):
@@ -109,7 +102,7 @@ class Ui_Renamer(object):
     # setupUi
 
     def retranslateUi(self, Renamer):
-        Renamer.setWindowTitle(QCoreApplication.translate("Renamer", u"Dialog", None))
+        Renamer.setWindowTitle(QCoreApplication.translate("Renamer", u"Rename Files", None))
         self.label.setText(QCoreApplication.translate("Renamer", u"Show", None))
         self.show_selected_button.setText(QCoreApplication.translate("Renamer", u"Selected", None))
         self.show_group_button.setText(QCoreApplication.translate("Renamer", u"Group", None))

@@ -93,7 +93,7 @@ class Ui_Dialog(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
+        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Directory Selection", None))
         self.add_button.setText(QCoreApplication.translate("Dialog", u"Add", None))
         self.remove_button.setText(QCoreApplication.translate("Dialog", u"Remove", None))
         self.check_subdirectories_box.setText(QCoreApplication.translate("Dialog", u"Check subdirectories ", None))
