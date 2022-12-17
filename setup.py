@@ -18,7 +18,7 @@ scripts = [os.path.join(scripts_path, f) for f in os.listdir(scripts_path)]
 
 setup(
     name='picture_comparator',
-    version='0.1.6',
+    version='0.1.7',
     author='Armas',
     author_email='halftough29A@gmail.com',
     description='Find similar images in a set.',

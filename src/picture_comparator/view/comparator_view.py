@@ -3,9 +3,9 @@ from __future__ import annotations
 import math
 import os.path
 from enum import Enum
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Iterable
 
-from PySide6.QtCore import QRect, Qt, QPoint, QSize
+from PySide6.QtCore import QRect, Qt, QPoint, QSize, Signal, QEvent
 from PySide6.QtGui import QPaintEvent, QPainter, QResizeEvent, QMouseEvent, QWheelEvent, QColor, QStaticText, \
     QPainterPath
 from PySide6.QtWidgets import QWidget
@@ -155,13 +155,6 @@ class Info:
         self.file_size = FileSizeAttribute(image.file_size)
         self.quality = QualityAttribute(image.quality)
 
-    def raw_text(self):
-        return f"{self.path.raw_text}\n{self.resolution.raw_text}\n{self.file_size.raw_text}\n{self.quality.raw_text}"
-
-    def text(self):
-        return QStaticText(
-            f'{self.path.text}<br/>{self.resolution.text}<br/>{self.file_size.text}<br/>{self.quality.text}')
-
     @staticmethod
     def mark_best_worst(info_iter: List[Info]):
         PathAttribute.trim_paths([info.path for info in info_iter])
@@ -252,10 +245,19 @@ class Section:
         self._paint_zoom(painter)
         painter.drawRect(self.rect)
 
+    @classmethod
+    def get_image_at_pos(cls, pos: QPoint, sections: Iterable[Section]) -> Optional[ImageInfo]:
+        for section in sections:
+            if section.rect.contains(pos):
+                return section.image
+
 
 class CompareWidget(QWidget):
+    ImageHoverChanged = Signal(str)
+
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._last_hovered = ''
         self.spacing = 5
         self.moving = False
         # Position of zoomed in images, where (0, 0) is top-left corner and (1, 1) bottom-right corner.
@@ -345,6 +347,13 @@ class CompareWidget(QWidget):
         event.accept()
 
     def mouseMoveEvent(self, event: QMouseEvent) -> None:
+        # Display path of image under the cursor on the statusbar.
+        if self.sections:
+            image = Section.get_image_at_pos(event.pos(), self.sections)
+            path = image.path if image else ''
+            if path != self._last_hovered:
+                self._last_hovered = path
+                self.ImageHoverChanged.emit(path)
         if event.buttons() & Qt.LeftButton:
             if self.moving and self.sections:
                 pixel_change = self._last_pos - event.pos()
@@ -359,6 +368,11 @@ class CompareWidget(QWidget):
         else:
             self.moving = False
         event.accept()
+
+    def leaveEvent(self, event: QEvent) -> None:
+        if self._last_hovered:
+            self._last_hovered = ''
+            self.ImageHoverChanged.emit('')
 
     def wheelEvent(self, event: QWheelEvent) -> None:
         if self.sections:

@@ -1,7 +1,7 @@
 from random import randint
 from typing import Union, Optional, Iterable
 
-from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QSize, Qt, QRect, QPoint
+from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QSize, Qt, QRect, QPoint, Signal, QEvent
 from PySide6.QtGui import QPainter, QResizeEvent, QMouseEvent, QPainterPath, QColor, QIcon
 from PySide6.QtWidgets import QListView, QStyleOptionViewItem, QStyledItemDelegate
 
@@ -91,14 +91,18 @@ class GroupListDelegate(QStyledItemDelegate):
 
 
 class GroupListView(QListView):
+    ImageHoverChanged = Signal(str)
+
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._last_hovered = ''
         model = WatchedListModel()
         selection_model = GroupSelectionModel()
         selection_model.setModel(model)
         self.setModel(model)
         self.setSelectionModel(selection_model)
         self.setItemDelegate(GroupListDelegate())
+        self.setMouseTracking(True)
 
     def model(self) -> WatchedListModel:
         return super().model()
@@ -122,3 +126,21 @@ class GroupListView(QListView):
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         self.selectionModel().press_ended()
         super().mouseReleaseEvent(event)
+
+    def mouseMoveEvent(self, e: QMouseEvent) -> None:
+        index = self.indexAt(e.pos())
+        if index.isValid():
+            image = self.model().elements[index.row()]
+            path = image.path if image else ''
+        else:
+            path = ''
+        if self._last_hovered != path:
+            self._last_hovered = path
+            self.ImageHoverChanged.emit(path)
+
+        super().mouseMoveEvent(e)
+
+    def leaveEvent(self, event: QEvent) -> None:
+        if self._last_hovered:
+            self._last_hovered = ''
+            self.ImageHoverChanged.emit('')

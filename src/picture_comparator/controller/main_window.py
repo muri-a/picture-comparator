@@ -2,6 +2,7 @@ from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QApplication
 
 from picture_comparator.controller.action_buttons import ActionButtonsController
+from picture_comparator.controller.comparator import Comparator
 from picture_comparator.controller.group_list import GroupList
 from picture_comparator.controller.log import LogController
 from picture_comparator.controller.matches import MatchesController
@@ -31,6 +32,13 @@ class MainWindowController:
         self.search_engine.ImageFound.connect(self.image_found)
         self.search_engine.LoadingImageFailed.connect(self.loading_image_failed)
 
+        self.comparator.compare_widget.ImageHoverChanged.connect(self.display_path_on_statusbar)
+        self.group_list.list_view.ImageHoverChanged.connect(self.display_path_on_statusbar)
+
+    @property
+    def comparator(self) -> Comparator:
+        return self.group_list.comparator
+
     def start(self):
         self.window.show()
         self.search_engine.start_comparison()
@@ -52,6 +60,10 @@ class MainWindowController:
     @Slot()
     def loading_image_failed(self, reason: str, path: str):
         self.log.log_message(LogMessage(LogType.ERROR, f"Could not load '{path}'. {reason}.", True))
+
+    @Slot()
+    def display_path_on_statusbar(self, path: str):
+        self.window.ui.statusbar.showMessage(path)
 
     @Slot()
     def show_log(self):
