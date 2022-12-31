@@ -71,26 +71,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.pager_layout)
 
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setContentsMargins(-1, 0, -1, -1)
-        self.list_thumbs_button = QPushButton(self.verticalLayoutWidget)
-        self.list_thumbs_button.setObjectName(u"list_thumbs_button")
-
-        self.horizontalLayout_2.addWidget(self.list_thumbs_button)
-
-        self.stacked_thumbs_button = QPushButton(self.verticalLayoutWidget)
-        self.stacked_thumbs_button.setObjectName(u"stacked_thumbs_button")
-
-        self.horizontalLayout_2.addWidget(self.stacked_thumbs_button)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_2.addItem(self.horizontalSpacer)
-
-
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
-
         self.splitter.addWidget(self.verticalLayoutWidget)
         self.splitter_2 = QSplitter(self.splitter)
         self.splitter_2.setObjectName(u"splitter_2")
@@ -220,6 +200,8 @@ class Ui_MainWindow(object):
         self.current_group_list_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.current_group_list_view.setAutoScroll(True)
         self.current_group_list_view.setSelectionMode(QAbstractItemView.MultiSelection)
+        self.current_group_list_view.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.current_group_list_view.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.current_group_list_view.setMovement(QListView.Static)
         self.current_group_list_view.setFlow(QListView.LeftToRight)
         self.current_group_list_view.setSpacing(5)
@@ -270,8 +252,6 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.action_rename.setShortcut(QCoreApplication.translate("MainWindow", u"F2", None))
 #endif // QT_CONFIG(shortcut)
-        self.list_thumbs_button.setText(QCoreApplication.translate("MainWindow", u"List", None))
-        self.stacked_thumbs_button.setText(QCoreApplication.translate("MainWindow", u"Stacked", None))
 #if QT_CONFIG(tooltip)
         self.display_multiple_button.setToolTip(QCoreApplication.translate("MainWindow", u"Display images next to each other.", None))
 #endif // QT_CONFIG(tooltip)

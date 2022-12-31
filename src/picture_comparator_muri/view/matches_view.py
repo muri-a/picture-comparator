@@ -3,7 +3,7 @@ from typing import Union, Optional, Dict
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt, QSize
 from PySide6.QtGui import QPainter, QImage
 from PySide6.QtWidgets import QGridLayout, QScrollArea, QListView, QAbstractItemDelegate, QStyleOptionViewItem, QStyle, \
-    QWidget
+    QWidget, QAbstractItemView
 
 from picture_comparator_muri.model.image_group import ImageGroup
 from picture_comparator_muri.model.watched_list import WatchedList, WatchedListModel
@@ -70,6 +70,8 @@ class MatchesListView(QListView):
         super().__init__(parent)
         self.setModel(WatchedListModel())
         self.setItemDelegate(ListMatchDelegate())
+        self.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
 
     def model(self) -> WatchedListModel:  # Override type hint
         return super().model()

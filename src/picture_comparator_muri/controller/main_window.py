@@ -28,8 +28,8 @@ class MainWindowController:
         self.window.ui.action_rename.triggered.connect(self.group_list.show_rename_dialog)
         self.window.ui.action_show_log.triggered.connect(self.show_log)
 
-        self.window.ui.list_thumbs_button.clicked.connect(self.set_list_thumbs)
-        self.window.ui.stacked_thumbs_button.clicked.connect(self.set_stack_thumbs)
+        # self.window.ui.list_thumbs_button.clicked.connect(self.set_list_thumbs)
+        # self.window.ui.stacked_thumbs_button.clicked.connect(self.set_stack_thumbs)
         self.search_engine.ImageFound.connect(self.image_found)
         self.search_engine.LoadingImageFailed.connect(self.loading_image_failed)
 
@@ -44,15 +44,15 @@ class MainWindowController:
         self.window.show()
         self.search_engine.start_comparison()
 
-    def set_list_thumbs(self):
-        self.window.ui.list_thumbs_button.setDown(True)
-        self.window.ui.stacked_thumbs_button.setDown(False)
-        self.window.ui.matches_stack.setCurrentIndex(0)
-
-    def set_stack_thumbs(self):
-        self.window.ui.list_thumbs_button.setDown(False)
-        self.window.ui.stacked_thumbs_button.setDown(True)
-        self.window.ui.matches_stack.setCurrentIndex(1)
+    # def set_list_thumbs(self):
+    #     self.window.ui.list_thumbs_button.setDown(True)
+    #     self.window.ui.stacked_thumbs_button.setDown(False)
+    #     self.window.ui.matches_stack.setCurrentIndex(0)
+    #
+    # def set_stack_thumbs(self):
+    #     self.window.ui.list_thumbs_button.setDown(False)
+    #     self.window.ui.stacked_thumbs_button.setDown(True)
+    #     self.window.ui.matches_stack.setCurrentIndex(1)
 
     @Slot()
     def image_found(self, image: ImageInfo):
