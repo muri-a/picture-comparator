@@ -28,6 +28,10 @@ class WatchedList(QObject):
         self._elements.insert(index, element)
         self.ElementAdded.emit(element, index)
 
+    def clear(self):
+        self._elements.clear()
+        self.ContentChanged.emit()
+
     def replace(self, elements: Iterable):
         self._elements.clear()
         self._elements.extend(elements)

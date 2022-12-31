@@ -302,7 +302,14 @@
     </property>
     <addaction name="action_show_log"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="action_rename"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -319,29 +326,40 @@
     <string>Show log</string>
    </property>
   </action>
+  <action name="action_rename">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Rename</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>MatchesListView</class>
    <extends>QListView</extends>
-   <header>picture_comparator/view/matches_view</header>
+   <header>picture_comparator_muri/view/matches_view</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>MatchesStackView</class>
    <extends>QWidget</extends>
-   <header>picture_comparator/view/matches_view</header>
+   <header>picture_comparator_muri/view/matches_view</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>GroupListView</class>
    <extends>QListView</extends>
-   <header>picture_comparator/view/group_list_view</header>
+   <header>picture_comparator_muri/view/group_list_view</header>
   </customwidget>
   <customwidget>
    <class>CompareWidget</class>
    <extends>QWidget</extends>
-   <header>picture_comparator/view/comparator_view</header>
+   <header>picture_comparator_muri/view/comparator_view</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -25,6 +25,7 @@ class MainWindowController:
         self.matches = MatchesController(self)
 
         self.window.ui.action_quit.triggered.connect(self.exit_application)
+        self.window.ui.action_rename.triggered.connect(self.group_list.show_rename_dialog)
         self.window.ui.action_show_log.triggered.connect(self.show_log)
 
         self.window.ui.list_thumbs_button.clicked.connect(self.set_list_thumbs)

@@ -325,6 +325,11 @@ class CompareWidget(QWidget):
                     section.zoom = self.leading_section.zoom
         self.update()
 
+    def clear(self):
+        self.sections.clear()
+        self.leading_section = None
+        self.update()
+
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)

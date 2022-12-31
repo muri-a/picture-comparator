@@ -8,18 +8,23 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QMetaObject, QRect, QSize, Qt)
-from PySide6.QtGui import (QAction, QIcon)
-from PySide6.QtWidgets import (QAbstractItemView, QFrame, QHBoxLayout,
-                               QLayout, QListView, QMenu,
-                               QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
-                               QSplitter, QStackedWidget, QStatusBar, QVBoxLayout,
-                               QWidget)
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QFrame, QHBoxLayout,
+    QLayout, QListView, QMainWindow, QMenu,
+    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
+    QSplitter, QStackedWidget, QStatusBar, QVBoxLayout,
+    QWidget)
 
 from picture_comparator_muri.view.comparator_view import CompareWidget
 from picture_comparator_muri.view.group_list_view import GroupListView
 from picture_comparator_muri.view.matches_view import (MatchesListView, MatchesStackView)
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -30,6 +35,9 @@ class Ui_MainWindow(object):
         self.action_quit.setObjectName(u"action_quit")
         self.action_show_log = QAction(MainWindow)
         self.action_show_log.setObjectName(u"action_show_log")
+        self.action_rename = QAction(MainWindow)
+        self.action_rename.setObjectName(u"action_rename")
+        self.action_rename.setEnabled(False)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_3 = QVBoxLayout(self.centralwidget)
@@ -228,15 +236,19 @@ class Ui_MainWindow(object):
         self.menuFile.setObjectName(u"menuFile")
         self.menuHelp = QMenu(self.menubar)
         self.menuHelp.setObjectName(u"menuHelp")
+        self.menuEdit = QMenu(self.menubar)
+        self.menuEdit.setObjectName(u"menuEdit")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuEdit.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
         self.menuFile.addAction(self.action_quit)
         self.menuHelp.addAction(self.action_show_log)
+        self.menuEdit.addAction(self.action_rename)
 
         self.retranslateUi(MainWindow)
 
@@ -254,6 +266,10 @@ class Ui_MainWindow(object):
         self.action_quit.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Q", None))
 #endif // QT_CONFIG(shortcut)
         self.action_show_log.setText(QCoreApplication.translate("MainWindow", u"Show log", None))
+        self.action_rename.setText(QCoreApplication.translate("MainWindow", u"Rename", None))
+#if QT_CONFIG(shortcut)
+        self.action_rename.setShortcut(QCoreApplication.translate("MainWindow", u"F2", None))
+#endif // QT_CONFIG(shortcut)
         self.list_thumbs_button.setText(QCoreApplication.translate("MainWindow", u"List", None))
         self.stacked_thumbs_button.setText(QCoreApplication.translate("MainWindow", u"Stacked", None))
 #if QT_CONFIG(tooltip)
@@ -273,5 +289,6 @@ class Ui_MainWindow(object):
         self.delete_button.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
+        self.menuEdit.setTitle(QCoreApplication.translate("MainWindow", u"Edit", None))
     # retranslateUi
 

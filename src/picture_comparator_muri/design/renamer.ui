@@ -153,7 +153,7 @@
   <customwidget>
    <class>RenamerFileTreeView</class>
    <extends>QTreeWidget</extends>
-   <header>picture_comparator/view/renamer_file_tree_view</header>
+   <header>picture_comparator_muri/view/renamer_file_tree_view</header>
   </customwidget>
  </customwidgets>
  <resources/>
