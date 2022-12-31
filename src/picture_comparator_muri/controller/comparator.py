@@ -15,6 +15,10 @@ class Comparator:
         self.action_buttons.ShowZoomChanged.connect(self.update_view)
 
     def clear(self):
+        self.images.clear()
+        self.compare_widget.clear()
+
+    def reset(self):
         # Clearing leading_section is enough to reset zoom.
         self.compare_widget.leading_section = None
 

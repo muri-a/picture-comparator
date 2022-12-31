@@ -85,6 +85,7 @@ class MatchesController:
 
     @Slot()
     def result_changed(self, current: QItemSelection, _: QItemSelection):
+        self.main_window_controller.window.ui.action_rename.setEnabled(bool(current.count()))
         if current.count():
             image_group: ImageGroup = current.indexes()[0].data(Qt.DisplayRole)
             self.group_list.set_group(image_group)
@@ -119,3 +120,9 @@ class MatchesController:
         i = self.list_view_model.createIndex(index, 0)
         new_selection = QItemSelection(i, i)
         self.list_view.selectionModel().select(new_selection, QItemSelectionModel.ClearAndSelect)
+        if not self.all_groups:
+            self.main_window_controller.window.ui.action_rename.setEnabled(False)
+            self.list_view.selectionModel().clearSelection()
+            self.group_list.clear()
+
+

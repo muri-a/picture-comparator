@@ -37,11 +37,16 @@ class GroupList:
         self.action_buttons.DisplayModeChanged.connect(self.display_mode_changed)
         self.delete_button.clicked.connect(self.delete_marked)
         self.main_window_controller.window.DeleteKeyPressed.connect(self.delete_marked)
-        self.main_window_controller.window.RenameKeyPressed.connect(self.show_rename_dialog)
 
     @property
     def ui(self) -> Ui_MainWindow:
         return self.main_window_controller.window.ui
+
+    def clear(self):
+        self.image_group = None
+        self.images.clear()
+        self.comparator.clear()
+        self.update_selection()
 
     def set_group(self, image_group: ImageGroup):
         with self.selection.select_manually:
@@ -50,7 +55,7 @@ class GroupList:
         self.image_group = image_group
         self.image_group.set_identical()
         self.images.replace(image_group)
-        self.comparator.clear()
+        self.comparator.reset()
         self.update_selection()
 
     def update_selection(self):
