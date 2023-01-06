@@ -95,34 +95,35 @@ class SearchThread(QThread):
 
     def _find_results(self):
         X = [image.hash for image in self.images]
-        self.image_tree = BallTree(X)
-        self.raw_results = self.image_tree.query_radius(X, 3)
-        for result in self.raw_results:
-            if len(result) < 2:
-                continue
-            main_group = None  # group to which all other groups will be merged if there are multiple ones
-            new_group = []  # indices for images that weren't part of any group previously
+        if X:
+            self.image_tree = BallTree(X)
+            self.raw_results = self.image_tree.query_radius(X, 3)
+            for result in self.raw_results:
+                if len(result) < 2:
+                    continue
+                main_group = None  # group to which all other groups will be merged if there are multiple ones
+                new_group = []  # indices for images that weren't part of any group previously
 
-            for index in result:
-                group = self.group_map.get(index)
-                if not group:
-                    new_group.append(index)
-                elif main_group is None:
-                    main_group = group
-                elif main_group is not group:
-                    for image in group:
-                        self.group_map[image.index] = main_group
-                    main_group.merge(group)
-                    self.groups.remove(group)
+                for index in result:
+                    group = self.group_map.get(index)
+                    if not group:
+                        new_group.append(index)
+                    elif main_group is None:
+                        main_group = group
+                    elif main_group is not group:
+                        for image in group:
+                            self.group_map[image.index] = main_group
+                        main_group.merge(group)
+                        self.groups.remove(group)
 
-            if main_group is None:
-                main_group = ImageGroup()
-                self.groups.append(main_group)
+                if main_group is None:
+                    main_group = ImageGroup()
+                    self.groups.append(main_group)
 
-            images = [self.images[i] for i in new_group]
-            main_group.add_images(images)
-            for index in new_group:
-                self.group_map[index] = main_group
+                images = [self.images[i] for i in new_group]
+                main_group.add_images(images)
+                for index in new_group:
+                    self.group_map[index] = main_group
 
         self.search_engine.ResultsReady.emit(self.groups)
         self.image_tree = None
