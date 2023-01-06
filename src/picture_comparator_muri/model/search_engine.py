@@ -148,4 +148,4 @@ class SearchEngine(QObject):
 
     def start_comparison(self):
         self.search_thread = SearchThread(self)
-        self.search_thread.run()
+        self.search_thread.start()
