@@ -25,3 +25,5 @@ def readable_size(size: int):
         return str(round(size / 0x400, 2)) + ' kB'
     elif not size >> 30:
         return str(round(size / 0x100000, 2)) + ' MB'
+    else:
+        return str(round(size / 0x40000000, 2)) + ' GB'
