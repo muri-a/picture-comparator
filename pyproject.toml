@@ -32,6 +32,21 @@ picture-comparator = "picture_comparator_muri.main:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/.git",
+    "/.gitignore",
+    "/.idea",
+    "/build",
+    "/dist",
+    "/pictures",
+    "/more pictures",
+    "/readme_images",
+    '/test_env',
+    '/venv',
+    '/ui_generate.ui',
+    '/src/picture_comparator_muri/design'
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/picture_comparator_muri"]
