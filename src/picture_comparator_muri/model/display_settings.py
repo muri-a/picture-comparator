@@ -18,7 +18,7 @@ class DisplaySettings:
         self.zoom = Zoom.SCALED
         self.display_mode = DisplayMode.ONE_BY_ONE
         self.show_info: bool = True
-        self.show_info: bool = True
+        self.show_zoom: bool = True
 
     @property
     def delete_mode(self) -> bool:
