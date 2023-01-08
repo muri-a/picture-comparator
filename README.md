@@ -34,5 +34,3 @@ The application is still in early development. Some known problems include.
 - Comparison algorithm showing many false positives.
 - Very limited configuration. 
 - No option to start new search (need to restart application).
-- Zoom being shown regardless if zoom button is pressed.
-- Zooming being overly simple and broken.

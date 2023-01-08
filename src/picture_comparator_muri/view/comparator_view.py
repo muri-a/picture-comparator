@@ -166,13 +166,40 @@ class Info:
 class Section:
     """Helper for drawing current images."""
     text_padding = 10
+    min_zoom = -4.0
+    max_zoom = 4.0
 
     def __init__(self, image: ImageInfo):
         self.image: ImageInfo = image
         self.info = Info(image)
         self._rect: QRect = QRect()
-        self.fit_zoom: Optional[float] = None
-        self.zoom: float = 1
+        self.fit_zoom: float = 1
+        self._zoom_value: float = 0  # To simplify the math, zoom = 2 ** zoom_value.
+
+    @staticmethod
+    def zoom_function(value: float) -> float:
+        """Function converting zoom value into proportion based zoom."""
+        return 2 ** value
+
+    @property
+    def zoom_value(self) -> float:
+        return self._zoom_value
+
+    @zoom_value.setter
+    def zoom_value(self, value: float):
+        # Allow zoom below min zoom if it's not enough to fit image.
+        min_zoom = min(self.min_zoom, self.fit_zoom)
+        value = max(value, min_zoom)
+        value = min(value, self.max_zoom)
+        self._zoom_value = value
+
+    @property
+    def zoom(self) -> float:
+        return self.zoom_function(self.zoom_value)
+
+    @zoom.setter
+    def zoom(self, value: float):
+        self.zoom_value = math.log(value, 2)
 
     @property
     def rect(self) -> QRect:
@@ -225,25 +252,51 @@ class Section:
                 painter.strokePath(path, pen)
                 painter.fillPath(path, info.color())
 
-    def _paint_zoom(self, painter):
-        rect_width = 40
-        rect_height = 20
-        path = QPainterPath()
-        rect = QRect(self.rect.x() + self.rect.width() - rect_width - self.text_padding,
-                     self.rect.y() + self.rect.height() - rect_height - self.text_padding,
-                     rect_width, rect_height)
-        path.addRoundedRect(rect, 10, 10)
-        painter.fillPath(path, QColor.fromRgb(0, 0, 0, 128))
-        text = f'{round(self.zoom * 100)}%'
-        painter.setPen(QColor.fromRgb(255, 255, 255))
-        painter.drawText(rect, Qt.AlignCenter, text)
-        painter.setPen(QColor.fromRgb(0, 0, 0))
+    def _paint_zoom(self, painter, widget):
+        if widget.display_settings.show_zoom:
+            rect_width = 40
+            rect_height = 20
+            path = QPainterPath()
+            rect = QRect(self.rect.x() + self.rect.width() - rect_width - self.text_padding,
+                         self.rect.y() + self.rect.height() - rect_height - self.text_padding,
+                         rect_width, rect_height)
+            path.addRoundedRect(rect, 10, 10)
+            painter.fillPath(path, QColor.fromRgb(0, 0, 0, 128))
+            text = f'{round(self.zoom * 100)}%'
+            painter.setPen(QColor.fromRgb(255, 255, 255))
+            painter.drawText(rect, Qt.AlignCenter, text)
+            painter.setPen(QColor.fromRgb(0, 0, 0))
 
     def paint(self, painter: QPainter, widget: CompareWidget):
         self._paint_image(painter, widget)
         self._paint_info(painter, widget)
-        self._paint_zoom(painter)
+        self._paint_zoom(painter, widget)
         painter.drawRect(self.rect)
+
+    def get_new_position(self, widget_point: QPoint, old_position: Tuple[float, float], old_zoom: float):
+        """
+        Calculate image shift position, such that mouse cursor keeps pointing at the same pixel while changing zoom.
+        :param widget_point: Local coordinates of mouse event on a widget.
+        :param old_position: Shift position before changing zoom.
+        :param old_zoom: Value of zoom before change.
+        """
+        local_x = widget_point.x() - self.rect.x()
+        local_y = widget_point.y() - self.rect.y()
+
+        # Getting image's x, y for current mouse position.
+        border_x = (self.image.width() - self.rect.width() / old_zoom) * old_position[0]
+        border_y = (self.image.height() - self.rect.height() / old_zoom) * old_position[1]
+        x = border_x + local_x / old_zoom
+        y = border_y + local_y / old_zoom
+
+        # Getting new position such that x, y stay the same for new zoom.
+
+        area_x_width = self.image.width() - self.rect.width() / self.zoom
+        area_y_width = self.image.height() - self.rect.height() / self.zoom
+
+        pos_x = ((x - local_x / self.zoom) / area_x_width) if area_x_width > 0 else .5
+        pos_y = ((y - local_y / self.zoom) / area_y_width) if area_y_width > 0 else .5
+        return pos_x, pos_y
 
     @classmethod
     def get_image_at_pos(cls, pos: QPoint, sections: Iterable[Section]) -> Optional[ImageInfo]:
@@ -261,12 +314,22 @@ class CompareWidget(QWidget):
         self.spacing = 5
         self.moving = False
         # Position of zoomed in images, where (0, 0) is top-left corner and (1, 1) bottom-right corner.
-        self.position: Tuple[float, float] = (.5, .5)
+        self._position: Tuple[float, float] = (.5, .5)
         self._last_pos: QPoint = QPoint()
         self.sections = []
         self.leading_section: Optional[Section] = None
         self.display_settings: Optional[DisplaySettings] = None
         self.setMouseTracking(True)
+
+    @property
+    def position(self) -> Tuple[float, float]:
+        return self._position
+
+    @position.setter
+    def position(self, value: Tuple[float, float]):
+        x = max(min(value[0], 1), 0)
+        y = max(min(value[1], 1), 0)
+        self._position = (x, y)
 
     def set_display_settings(self, display_settings: DisplaySettings):
         self.display_settings = display_settings
@@ -330,6 +393,11 @@ class CompareWidget(QWidget):
         self.leading_section = None
         self.update()
 
+    def section_at(self, point: QPoint) -> Optional[Section]:
+        for section in self.sections:
+            if section.rect.contains(point):
+                return section
+
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
@@ -365,8 +433,8 @@ class CompareWidget(QWidget):
                 w_factor = self.leading_section.image.width() * self.leading_section.zoom - self.leading_section.rect.width()
                 h_factor = self.leading_section.image.height() * self.leading_section.zoom - self.leading_section.rect.height()
                 self.position = (
-                    min(1, max(0, (self.position[0] + pixel_change.x() / w_factor) if w_factor else .5)),
-                    min(1, max(0, (self.position[1] + pixel_change.y() / h_factor) if h_factor else .5))
+                    self.position[0] + pixel_change.x() / w_factor if w_factor else .5,
+                    self.position[1] + pixel_change.y() / h_factor if h_factor else .5
                 )
                 self._last_pos = event.pos()
                 self.update()
@@ -380,19 +448,25 @@ class CompareWidget(QWidget):
             self.ImageHoverChanged.emit('')
 
     def wheelEvent(self, event: QWheelEvent) -> None:
-        if self.sections:
+        # Handling zoom.
+        section = self.section_at(event.position().toPoint())
+        if section:
             step = event.angleDelta().y()
             if self.display_settings.zoom.SCALED:
                 # TODO
-                # better zooming math
-                # min/max zoom
                 # relative to mouse position
                 before = self.leading_section.zoom
-                after = self.leading_section.zoom + step / 1000
+                after = Section.zoom_function(self.leading_section.zoom_value + step / 1000)
                 # Stop at 100% when landing near
                 if before < 1 < after or before > 1 > after:
                     after = 1
+                # Stop at fit_zoom when landing near
+                if before < self.leading_section.fit_zoom < after or before > self.leading_section.fit_zoom > after:
+                    after = self.leading_section.fit_zoom
+
                 self.leading_section.zoom = after
                 self.adjust_zoom_to_leader()
+                self.position = section.get_new_position(event.position(), self.position, before)
+
                 self.update()
         event.accept()
