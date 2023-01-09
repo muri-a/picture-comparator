@@ -181,6 +181,10 @@ class Section:
         """Function converting zoom value into proportion based zoom."""
         return 2 ** value
 
+    @staticmethod
+    def reverse_zoom_function(value: float) -> float:
+        return math.log(value, 2)
+
     @property
     def zoom_value(self) -> float:
         return self._zoom_value
@@ -188,7 +192,7 @@ class Section:
     @zoom_value.setter
     def zoom_value(self, value: float):
         # Allow zoom below min zoom if it's not enough to fit image.
-        min_zoom = min(self.min_zoom, self.fit_zoom)
+        min_zoom = min(self.min_zoom, self.reverse_zoom_function(self.fit_zoom))
         value = max(value, min_zoom)
         value = min(value, self.max_zoom)
         self._zoom_value = value
@@ -199,7 +203,7 @@ class Section:
 
     @zoom.setter
     def zoom(self, value: float):
-        self.zoom_value = math.log(value, 2)
+        self.zoom_value = self.reverse_zoom_function(value)
 
     @property
     def rect(self) -> QRect:
