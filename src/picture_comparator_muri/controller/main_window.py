@@ -28,6 +28,8 @@ class MainWindowController:
         self.window.ui.action_rename.triggered.connect(self.group_list.show_rename_dialog)
         self.window.ui.action_show_log.triggered.connect(self.show_log)
 
+        self.window.WindowClosed.connect(self.exit_application)
+
         # self.window.ui.list_thumbs_button.clicked.connect(self.set_list_thumbs)
         # self.window.ui.stacked_thumbs_button.clicked.connect(self.set_stack_thumbs)
         self.search_engine.ImageFound.connect(self.image_found)
@@ -72,4 +74,5 @@ class MainWindowController:
 
     @Slot()
     def exit_application(self):
+        self.search_engine.stop()
         QApplication.quit()
