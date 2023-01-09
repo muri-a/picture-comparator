@@ -8,6 +8,7 @@ from picture_comparator_muri.view.main_window_ui import Ui_MainWindow
 class MainWindow(QMainWindow):
     DeleteModifierTriggered = Signal(bool)
     DeleteKeyPressed = Signal()
+    WindowClosed = Signal()
 
     def __init__(self):
         super().__init__()
@@ -29,4 +30,4 @@ class MainWindow(QMainWindow):
         event.accept()
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        QApplication.quit()
+        self.WindowClosed.emit()

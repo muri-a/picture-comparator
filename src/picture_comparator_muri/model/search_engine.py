@@ -4,7 +4,7 @@ import os
 from typing import Optional, Set, List, Dict
 
 from PIL import UnidentifiedImageError
-from PySide6.QtCore import QObject, QThread, Signal
+from PySide6.QtCore import QObject, QThread, Signal, QMutex
 from numpy import ndarray
 from sklearn.neighbors import BallTree
 
@@ -14,9 +14,28 @@ from picture_comparator_muri.model.image_group import ImageGroup
 from picture_comparator_muri.model.image_info import ImageInfo
 
 
+class Mutex:
+    def __init__(self):
+        self._mutex = QMutex()
+
+    def __enter__(self):
+        self._mutex.lock()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._mutex.unlock()
+
+    def lock(self):
+        self._mutex.lock()
+
+    def unlock(self):
+        self._mutex.unlock()
+
+
 class SearchThread(QThread):
     def __init__(self, search_engine: SearchEngine):
         super().__init__()
+        self.was_stopped: bool = False
+        self.stopped_mutex = Mutex()
         self.search_engine = search_engine
         self.all_dirs: Set[str] = set()
         self.image_tree = None
@@ -62,6 +81,9 @@ class SearchThread(QThread):
     def _add_directory(self, directory: str):
         self.all_dirs.add(directory)
         for file in os.listdir(directory):
+            with self.stopped_mutex:
+                if self.was_stopped:
+                    return
             path = os.path.join(directory, file)
             if os.path.isdir(path):
                 if self.settings.scan_subdirectories and path not in self.all_dirs:
@@ -99,6 +121,9 @@ class SearchThread(QThread):
             self.image_tree = BallTree(X)
             self.raw_results = self.image_tree.query_radius(X, 3)
             for result in self.raw_results:
+                with self.stopped_mutex:
+                    if self.was_stopped:
+                        return
                 if len(result) < 2:
                     continue
                 main_group = None  # group to which all other groups will be merged if there are multiple ones
@@ -128,6 +153,10 @@ class SearchThread(QThread):
         self.search_engine.ResultsReady.emit(self.groups)
         self.image_tree = None
 
+    def stop(self) -> None:
+        with self.stopped_mutex:
+            self.was_stopped = True
+
 
 class SearchEngine(QObject):
     ImageFound = Signal(ImageInfo)
@@ -149,3 +178,7 @@ class SearchEngine(QObject):
     def start_comparison(self):
         self.search_thread = SearchThread(self)
         self.search_thread.start()
+
+    def stop(self):
+        self.search_thread.stop()
+        self.search_thread.wait()
